@@ -118,12 +118,12 @@
 
 <div class="starfield" id="starfield"></div>
 
-<div class="card">
-  <div class="check">&#127881;</div>
-  <h1>You're Registered!</h1>
-  <p class="subtitle">See you on April 18th at Expressions Dance Academy!</p>
-  <p class="address">6710 Division Ave S<br>Grand Rapids, MI 49548</p>
-  <a href="/" class="back-link">Back to Event Page</a>
+<div class="card" id="card">
+  <div class="check" id="loadingCheck">&#8987;</div>
+  <h1 id="heading">Verifying payment...</h1>
+  <p class="subtitle" id="subtitle"></p>
+  <p class="address" id="address"></p>
+  <a href="/" class="back-link" id="backLink" style="display:none">Back to Event Page</a>
 </div>
 
 <script>
@@ -140,6 +140,43 @@
       s.style.animationDelay = (Math.random() * 5).toFixed(1) + 's';
       if (Math.random() > 0.7) s.style.width = s.style.height = '3px';
       field.appendChild(s);
+    }
+  })();
+
+  // Verify the Stripe session before showing confirmation
+  (async function() {
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+
+    if (!sessionId) {
+      document.getElementById('loadingCheck').textContent = '\u274C';
+      document.getElementById('heading').textContent = 'No payment found';
+      document.getElementById('subtitle').textContent = 'Please complete registration first.';
+      document.getElementById('backLink').style.display = '';
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/verify-session?session_id=' + encodeURIComponent(sessionId));
+      const data = await res.json();
+
+      if (data.verified) {
+        document.getElementById('loadingCheck').textContent = '\uD83C\uDF89';
+        document.getElementById('heading').textContent = "You're Registered!";
+        document.getElementById('subtitle').textContent = 'See you on April 18th at Expressions Dance Academy!';
+        document.getElementById('address').innerHTML = '6710 Division Ave S<br>Grand Rapids, MI 49548';
+        document.getElementById('backLink').style.display = '';
+      } else {
+        document.getElementById('loadingCheck').textContent = '\u274C';
+        document.getElementById('heading').textContent = 'Payment not confirmed';
+        document.getElementById('subtitle').textContent = 'We could not verify your payment. Please try again or contact us.';
+        document.getElementById('backLink').style.display = '';
+      }
+    } catch (err) {
+      document.getElementById('loadingCheck').textContent = '\u274C';
+      document.getElementById('heading').textContent = 'Something went wrong';
+      document.getElementById('subtitle').textContent = 'Please contact us if you completed payment.';
+      document.getElementById('backLink').style.display = '';
     }
   })();
 </script>

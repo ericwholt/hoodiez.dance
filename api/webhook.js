@@ -1,4 +1,4 @@
-// Stripe webhook → Google Sheets
+// Stripe webhook → Google Sheets, then clear PII from Stripe metadata
 // Env vars needed:
 //   STRIPE_SECRET_KEY
 //   STRIPE_WEBHOOK_SECRET
@@ -36,17 +36,18 @@ async function appendToSheet(row) {
   // Check if headers exist, add them if sheet is empty
   const existing = await sheets.spreadsheets.values.get({
     spreadsheetId: sheetId,
-    range: 'Sheet1!A1:K1',
+    range: 'Sheet1!A1:L1',
   });
 
   if (!existing.data.values || existing.data.values.length === 0) {
     await sheets.spreadsheets.values.update({
       spreadsheetId: sheetId,
-      range: 'Sheet1!A1:K1',
+      range: 'Sheet1!A1:L1',
       valueInputOption: 'RAW',
       requestBody: {
         values: [[
           'Timestamp',
+          'Registration ID',
           'Dancer First Name',
           'Dancer Last Name',
           'Dancer Age',
@@ -65,7 +66,7 @@ async function appendToSheet(row) {
   // Append the registration row
   await sheets.spreadsheets.values.append({
     spreadsheetId: sheetId,
-    range: 'Sheet1!A:K',
+    range: 'Sheet1!A:L',
     valueInputOption: 'RAW',
     insertDataOption: 'INSERT_ROWS',
     requestBody: {
@@ -96,6 +97,7 @@ module.exports = async function handler(req, res) {
 
     const row = [
       new Date().toISOString(),
+      meta.registrationId || '',
       meta.dancerFirstName || '',
       meta.dancerLastName || '',
       meta.dancerAge || '',
@@ -111,8 +113,27 @@ module.exports = async function handler(req, res) {
     try {
       await appendToSheet(row);
       console.log('Registration added to Google Sheet');
+
+      // Clear PII from Stripe metadata — keep only registrationId
+      await stripe.checkout.sessions.update(session.id, {
+        metadata: {
+          registrationId: meta.registrationId || '',
+          dancerFirstName: '',
+          dancerLastName: '',
+          dancerAge: '',
+          emergencyFirstName: '',
+          emergencyLastName: '',
+          emergencyRelationship: '',
+          phone: '',
+          liabilityAgreed: '',
+          medicalAgreed: '',
+          photoAgreed: '',
+          agreedAt: '',
+        },
+      });
+      console.log('PII cleared from Stripe metadata');
     } catch (err) {
-      console.error('Failed to write to Google Sheet:', err);
+      console.error('Failed to process registration:', err);
     }
   }
 

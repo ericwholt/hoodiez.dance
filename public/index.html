@@ -389,6 +389,11 @@
     <h2 class="form-card__title">Register</h2>
     <form id="regForm" novalidate>
 
+      <!-- Honeypot — hidden from real users, bots fill it -->
+      <div style="position:absolute;left:-9999px" aria-hidden="true">
+        <input type="text" name="_hp" id="hpField" tabindex="-1" autocomplete="off">
+      </div>
+
       <!-- Dancer Name -->
       <div class="form-row">
         <div class="field">
@@ -515,6 +520,7 @@
     btn.textContent = 'Processing\u2026';
 
     const data = {
+      _hp: document.getElementById('hpField').value,
       dancerFirstName: form.dancerFirstName.value.trim(),
       dancerLastName: form.dancerLastName.value.trim(),
       dancerAge: Number(form.dancerAge.value),

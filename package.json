@@ -4,6 +4,6 @@
   "private": true,
   "dependencies": {
     "googleapis": "^140.0.0",
-    "stripe": "^14.0.0"
+    "stripe": "^22.0.0"
   }
 }

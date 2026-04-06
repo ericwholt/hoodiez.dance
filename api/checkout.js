@@ -1,5 +1,6 @@
 // Requires STRIPE_SECRET_KEY environment variable set in Vercel project settings
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const crypto = require('crypto');
 
 const REQUIRED_FIELDS = [
   'dancerFirstName', 'dancerLastName', 'dancerAge',
@@ -24,6 +25,11 @@ module.exports = async function handler(req, res) {
   try {
     const body = req.body;
 
+    // Honeypot check — if this hidden field has a value, it's a bot
+    if (body._hp) {
+      return res.status(200).json({ url: 'https://hoodiez.dance/thanks.html' });
+    }
+
     for (const field of REQUIRED_FIELDS) {
       if (!body[field] && body[field] !== 0) {
         return res.status(400).json({ error: `Missing required field: ${field}` });
@@ -33,6 +39,9 @@ module.exports = async function handler(req, res) {
     if (!body.liabilityAgreed || !body.medicalAgreed || !body.photoAgreed) {
       return res.status(400).json({ error: 'All waivers must be agreed to' });
     }
+
+    // Generate a registration ID to minimize PII stored in Stripe
+    const registrationId = crypto.randomUUID();
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -57,6 +66,7 @@ module.exports = async function handler(req, res) {
       success_url: 'https://hoodiez.dance/thanks.html?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: 'https://hoodiez.dance/#register',
       metadata: {
+        registrationId,
         dancerFirstName: body.dancerFirstName,
         dancerLastName: body.dancerLastName,
         dancerAge: String(body.dancerAge),
