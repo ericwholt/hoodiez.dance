@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found — Hoodiez</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: #0d0b1a;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .starfield {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle var(--dur, 3s) ease-in-out infinite alternate;
+      opacity: 0;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.1; transform: scale(0.8); }
+      100% { opacity: var(--max-opacity, 0.8); transform: scale(1.2); }
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 520px;
+      padding: 3rem 2rem;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .error-code {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 15vw, 8rem);
+      background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      color: #f472b6;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+    }
+
+    .message {
+      font-size: 1.05rem;
+      color: #c4b5d4;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .back-link {
+      display: inline-block;
+      padding: 0.85rem 2.2rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
+      border-radius: 50px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(236, 72, 153, 0.35);
+    }
+
+    .back-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 28px rgba(236, 72, 153, 0.5);
+    }
+  </style>
+</head>
+<body>
+
+<div class="starfield" id="starfield"></div>
+
+<div class="card">
+  <div class="error-code">404</div>
+  <h1>This page doesn't exist</h1>
+  <p class="message">Looks like you hit a wrong move. Let's get you back on beat.</p>
+  <a href="/" class="back-link">Back to Home</a>
+</div>
+
+<script>
+  (function() {
+    const field = document.getElementById('starfield');
+    const count = Math.min(100, Math.floor(window.innerWidth * window.innerHeight / 10000));
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 100 + '%';
+      s.style.setProperty('--dur', (2 + Math.random() * 4).toFixed(1) + 's');
+      s.style.setProperty('--max-opacity', (0.4 + Math.random() * 0.6).toFixed(2));
+      s.style.animationDelay = (Math.random() * 5).toFixed(1) + 's';
+      if (Math.random() > 0.7) s.style.width = s.style.height = '3px';
+      field.appendChild(s);
+    }
+  })();
+</script>
+
+</body>
+</html>
