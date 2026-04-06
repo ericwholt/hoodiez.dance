@@ -51,7 +51,7 @@ module.exports = async function handler(req, res) {
         },
       ],
       payment_intent_data: {
-        description: 'GOLDEN - HUNTR/X Dance Class\nSat, April 18, 2026 — 11 AM - 12 PM\nExpressions Dance Academy\n6710 Division Ave S, Grand Rapids, MI 49548',
+        description: 'GOLDEN - HUNTR/X Dance Class — Sat, April 18, 2026, 11 AM - 12 PM — Expressions Dance Academy — 6710 Division Ave S, Grand Rapids, MI 49548',
       },
       mode: 'payment',
       success_url: 'https://hoodiez.dance/thanks.html?session_id={CHECKOUT_SESSION_ID}',
