@@ -431,7 +431,7 @@
       <!-- Age -->
       <div class="field">
         <label for="dancerAge">Dancer's Age</label>
-        <input type="number" id="dancerAge" name="dancerAge" required min="7" placeholder="Age">
+        <input type="number" id="dancerAge" name="dancerAge" required min="7" step="1" placeholder="Age">
         <p class="age-error" id="ageError">Must be 7 or older to register</p>
       </div>
 
@@ -532,13 +532,19 @@
 
   function validate() {
     const ageVal = ageInput.value.trim();
-    const ageTooLow = ageVal !== '' && Number(ageVal) < 7;
-    ageError.classList.toggle('show', ageTooLow);
-    ageInput.classList.toggle('invalid', ageTooLow);
+    const ageNum = Number(ageVal);
+    const ageInvalid = ageVal !== '' && (ageNum < 7 || !Number.isInteger(ageNum));
+    if (ageVal !== '' && ageNum < 7) {
+      ageError.textContent = 'Must be 7 or older to register';
+    } else if (ageVal !== '' && !Number.isInteger(ageNum)) {
+      ageError.textContent = 'Please enter a whole number';
+    }
+    ageError.classList.toggle('show', ageInvalid);
+    ageInput.classList.toggle('invalid', ageInvalid);
 
     const allFilled = [...inputs].every(i => i.value.trim() !== '');
     const allChecked = checks.every(c => c.checked);
-    btn.disabled = !(allFilled && allChecked && !ageTooLow);
+    btn.disabled = !(allFilled && allChecked && !ageInvalid);
   }
 
   inputs.forEach(i => i.addEventListener('input', validate));
