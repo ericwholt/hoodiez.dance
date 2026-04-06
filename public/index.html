@@ -236,6 +236,18 @@
       color: rgba(255, 255, 255, 0.25);
     }
 
+    .field-error {
+      display: none;
+      color: #f87171;
+      font-size: 0.85rem;
+      margin-top: 0.35rem;
+      font-weight: 500;
+    }
+
+    .field-error.show {
+      display: block;
+    }
+
     .age-error {
       display: none;
       color: #f87171;
@@ -547,7 +559,32 @@
     btn.disabled = !(allFilled && allChecked && !ageInvalid);
   }
 
-  inputs.forEach(i => i.addEventListener('input', validate));
+  inputs.forEach(i => {
+    i.addEventListener('input', function() {
+      // Clear error when user starts typing
+      if (this.value.trim() !== '') {
+        this.classList.remove('invalid');
+        const err = this.parentElement.querySelector('.field-error');
+        if (err) err.classList.remove('show');
+      }
+      validate();
+    });
+    i.addEventListener('blur', function() {
+      if (this.dataset.touched) return;
+      this.dataset.touched = 'true';
+      if (this.value.trim() === '') {
+        this.classList.add('invalid');
+        let err = this.parentElement.querySelector('.field-error');
+        if (!err) {
+          err = document.createElement('p');
+          err.className = 'field-error';
+          this.parentElement.appendChild(err);
+        }
+        err.textContent = 'Required';
+        err.classList.add('show');
+      }
+    });
+  });
   checks.forEach(c => c.addEventListener('change', validate));
 
   form.addEventListener('submit', async function(e) {
