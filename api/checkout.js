@@ -52,7 +52,7 @@ module.exports = async function handler(req, res) {
             currency: 'usd',
             product_data: {
               name: 'GOLDEN - HUNTR/X',
-              description: 'Get ready to dance! Hoodiez is partnering with Expressions Dance Studio for a fun, high-energy class where you\'ll learn choreography to "Golden" from K-Pop Demon Hunters. This class will be taught by Nessa, the choreographer and Isabella from the K-pop cover group Hoodiez, bringing their style, experience, and passion straight to the studio. Open to ages 7 and up, this is a beginners class that is perfect for K-pop fans and all dancers. Come ready to move, learn, and shine.',
+              description: 'Get ready to dance! Hoodiez is partnering with Expressions Dance Studio for a fun, high-energy class where you\'ll learn choreography to "Golden" from K-Pop Demon Hunters. This class will be taught by Nessa Maria, the choreographer and Isabella from the K-pop cover group Hoodiez, bringing their style, experience, and passion straight to the studio. Open to ages 7 and up, this is a beginners class that is perfect for K-pop fans and all dancers. Come ready to move, learn, and shine.',
             },
             unit_amount: 1500,
           },
