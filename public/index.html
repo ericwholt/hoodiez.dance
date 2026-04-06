@@ -7,7 +7,7 @@
   <meta name="description" content="Beginner K-pop dance class. Learn choreography to Golden from K-Pop Demon Hunters. April 18, 2026 at Expressions Dance Academy, Grand Rapids.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -81,37 +81,22 @@
       padding: 2rem 1.25rem 4rem;
     }
 
-    /* ── Hero ── */
+    /* ── Hero (video-first) ── */
     .hero {
       text-align: center;
-      padding: 3rem 0 2rem;
+      padding: 0 0 1.5rem;
     }
 
-    .hero__presented {
-      font-size: 0.85rem;
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--white-muted);
-      margin-bottom: 1rem;
+    .hero video {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 40px rgba(139, 92, 246, 0.2);
     }
 
-    .hero__title {
-      font-family: 'Dela Gothic One', sans-serif;
-      font-size: clamp(2.2rem, 6vw, 3.4rem);
-      line-height: 1.15;
-      margin-bottom: 0.5rem;
-      background: linear-gradient(135deg, var(--white) 0%, var(--pink-light) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero__tagline {
-      font-size: 1.15rem;
-      color: var(--pink-light);
-      font-weight: 500;
-      margin-bottom: 2rem;
+    .hero__cta-row {
+      margin-top: 1.5rem;
     }
 
     .cta-btn {
@@ -169,11 +154,6 @@
       flex-shrink: 0;
     }
 
-    /* ── Canva Embed ── */
-    .video-section {
-      margin: 2.5rem 0;
-    }
-
     /* ── Description ── */
     .description {
       margin: 2.5rem 0;
@@ -200,7 +180,7 @@
     }
 
     .form-card__title {
-      font-family: 'Dela Gothic One', sans-serif;
+      font-family: 'Bebas Neue', sans-serif;
       font-size: 1.6rem;
       text-align: center;
       margin-bottom: 2rem;
@@ -253,7 +233,7 @@
 
     /* ── Waivers ── */
     .waivers-heading {
-      font-family: 'Dela Gothic One', sans-serif;
+      font-family: 'Bebas Neue', sans-serif;
       font-size: 1.2rem;
       color: var(--gold);
       margin: 2rem 0 1rem;
@@ -350,7 +330,7 @@
     /* ── Mobile tweaks ── */
     @media (max-width: 600px) {
       .container { padding: 1.25rem 1rem 3rem; }
-      .hero { padding: 2rem 0 1.5rem; }
+      .hero video { border-radius: 8px; }
       .form-card { padding: 1.75rem 1.25rem; }
     }
   </style>
@@ -361,12 +341,14 @@
 
 <div class="container">
 
-  <!-- Hero -->
+  <!-- Hero — the video IS the flyer -->
   <header class="hero fade-up">
-    <p class="hero__presented">Hoodiez &times; Expressions Dance Academy Present</p>
-    <h1 class="hero__title">Golden / Huntrix<br>Dance Class</h1>
-    <p class="hero__tagline">Beginner Dance Class &mdash; Golden &mdash; Huntr/X</p>
-    <a href="#register" class="cta-btn">Sign Me Up &darr;</a>
+    <video autoplay muted playsinline>
+      <source src="/hero.mp4" type="video/mp4">
+    </video>
+    <div class="hero__cta-row">
+      <a href="#register" class="cta-btn">Register Now &darr;</a>
+    </div>
   </header>
 
   <!-- Info Chips -->
@@ -393,14 +375,6 @@
     </span>
   </div>
 
-  <!-- Canva Video -->
-  <section class="video-section fade-up">
-    <div style="position: relative; width: 100%; height: 0; padding-top: 125.0000%; padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden; border-radius: 8px; will-change: transform;">
-      <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
-        src="https://www.canva.com/design/DAHFvL0pKZM/wSukGjPnGboytZ5TrqwIUg/watch?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
-      </iframe>
-    </div>
-  </section>
 
   <!-- Description -->
   <section class="description fade-up">
