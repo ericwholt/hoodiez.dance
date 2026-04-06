@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Golden/Huntrix Dance Class — Hoodiez × Expressions</title>
+  <meta name="description" content="Beginner K-pop dance class. Learn choreography to Golden from K-Pop Demon Hunters. April 18, 2026 at Expressions Dance Academy, Grand Rapids.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-deep: #0d0b1a;
+      --bg-mid: #161230;
+      --bg-card: #1e1848;
+      --pink: #ec4899;
+      --pink-light: #f472b6;
+      --green: #34d399;
+      --green-light: #4ade80;
+      --gold: #fbbf24;
+      --white: #ffffff;
+      --white-muted: #c4b5d4;
+      --purple-glow: rgba(139, 92, 246, 0.3);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-deep);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ── Starfield background ── */
+    .starfield {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle var(--dur, 3s) ease-in-out infinite alternate;
+      opacity: 0;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.1; transform: scale(0.8); }
+      100% { opacity: var(--max-opacity, 0.8); transform: scale(1.2); }
+    }
+
+    /* ── Fade-up animation ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Layout ── */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 3rem 0 2rem;
+    }
+
+    .hero__presented {
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--white-muted);
+      margin-bottom: 1rem;
+    }
+
+    .hero__title {
+      font-family: 'Dela Gothic One', sans-serif;
+      font-size: clamp(2.2rem, 6vw, 3.4rem);
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--white) 0%, var(--pink-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero__tagline {
+      font-size: 1.15rem;
+      color: var(--pink-light);
+      font-weight: 500;
+      margin-bottom: 2rem;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--pink) 0%, #a855f7 100%);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(236, 72, 153, 0.4);
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 6px 32px rgba(236, 72, 153, 0.55);
+    }
+
+    /* ── Info Chips ── */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      margin: 2rem 0;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.5rem 1.1rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--white);
+      backdrop-filter: blur(4px);
+    }
+
+    .chip--green {
+      border-color: rgba(52, 211, 153, 0.3);
+      color: var(--green-light);
+    }
+
+    .chip svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* ── Canva Embed ── */
+    .video-section {
+      margin: 2.5rem 0;
+    }
+
+    /* ── Description ── */
+    .description {
+      margin: 2.5rem 0;
+    }
+
+    .description p {
+      color: var(--white-muted);
+      font-size: 1.05rem;
+      margin-bottom: 1rem;
+    }
+
+    .description p:last-child { margin-bottom: 0; }
+
+    .highlight { color: var(--pink-light); font-weight: 600; }
+
+    /* ── Form Card ── */
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 0 40px rgba(139, 92, 246, 0.08), 0 0 80px rgba(139, 92, 246, 0.04);
+      margin-top: 3rem;
+    }
+
+    .form-card__title {
+      font-family: 'Dela Gothic One', sans-serif;
+      font-size: 1.6rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 500px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    .field {
+      margin-bottom: 1.25rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--white-muted);
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.03em;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field input:focus {
+      border-color: var(--pink);
+      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15);
+    }
+
+    .field input::placeholder {
+      color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* ── Waivers ── */
+    .waivers-heading {
+      font-family: 'Dela Gothic One', sans-serif;
+      font-size: 1.2rem;
+      color: var(--gold);
+      margin: 2rem 0 1rem;
+      text-align: center;
+    }
+
+    .waiver-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1.25rem 1.25rem 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .waiver-card__title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .waiver-card__text {
+      font-size: 0.85rem;
+      color: var(--white-muted);
+      line-height: 1.55;
+      margin-bottom: 0.75rem;
+    }
+
+    .waiver-card label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--green-light);
+      cursor: pointer;
+    }
+
+    .waiver-card input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--green);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* ── Submit Button ── */
+    .submit-btn {
+      display: block;
+      width: 100%;
+      margin-top: 2rem;
+      padding: 1.1rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--green) 0%, #059669 100%);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      box-shadow: 0 4px 24px rgba(52, 211, 153, 0.3);
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 32px rgba(52, 211, 153, 0.5);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .submit-error {
+      text-align: center;
+      color: #f87171;
+      font-size: 0.9rem;
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      padding: 3rem 0 1rem;
+      color: var(--white-muted);
+      font-size: 0.8rem;
+      opacity: 0.6;
+    }
+
+    /* ── Mobile tweaks ── */
+    @media (max-width: 600px) {
+      .container { padding: 1.25rem 1rem 3rem; }
+      .hero { padding: 2rem 0 1.5rem; }
+      .form-card { padding: 1.75rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="starfield" id="starfield"></div>
+
+<div class="container">
+
+  <!-- Hero -->
+  <header class="hero fade-up">
+    <p class="hero__presented">Hoodiez &times; Expressions Dance Academy Present</p>
+    <h1 class="hero__title">Golden / Huntrix<br>Dance Class</h1>
+    <p class="hero__tagline">Beginner Dance Class &mdash; Golden &mdash; Huntr/X</p>
+    <a href="#register" class="cta-btn">Sign Me Up &darr;</a>
+  </header>
+
+  <!-- Info Chips -->
+  <div class="chips fade-up">
+    <span class="chip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Sat, April 18, 2026
+    </span>
+    <span class="chip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      11 AM – 12 PM
+    </span>
+    <span class="chip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Grand Rapids, MI
+    </span>
+    <span class="chip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Ages 7+
+    </span>
+    <span class="chip chip--green">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      $15
+    </span>
+  </div>
+
+  <!-- Canva Video -->
+  <section class="video-section fade-up">
+    <div style="position: relative; width: 100%; height: 0; padding-top: 125.0000%; padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden; border-radius: 8px; will-change: transform;">
+      <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
+        src="https://www.canva.com/design/DAHFvL0pKZM/wSukGjPnGboytZ5TrqwIUg/watch?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
+      </iframe>
+    </div>
+  </section>
+
+  <!-- Description -->
+  <section class="description fade-up">
+    <p><strong>Get ready to dance!</strong> Hoodiez is partnering with <span class="highlight">Expressions Dance Studio</span> for a fun, high-energy class where you'll learn choreography to <em>"Golden"</em> from K-Pop Demon Hunters.</p>
+    <p>This class will be taught by <span class="highlight">Nessa Marie</span>, the choreographer, and <span class="highlight">Isabella</span> from the K-pop cover group Hoodiez, bringing their style, experience, and passion straight to the studio.</p>
+    <p>Open to ages 7 and up, this is a <strong>beginners class</strong> perfect for K-pop fans and all dancers.</p>
+    <p><strong>Come ready to move, learn, and shine.</strong></p>
+  </section>
+
+  <!-- Registration Form -->
+  <section class="form-card fade-up" id="register">
+    <h2 class="form-card__title">Register</h2>
+    <form id="regForm" novalidate>
+
+      <!-- Dancer Name -->
+      <div class="form-row">
+        <div class="field">
+          <label for="dancerFirst">Dancer's First Name</label>
+          <input type="text" id="dancerFirst" name="dancerFirstName" required placeholder="First name">
+        </div>
+        <div class="field">
+          <label for="dancerLast">Dancer's Last Name</label>
+          <input type="text" id="dancerLast" name="dancerLastName" required placeholder="Last name">
+        </div>
+      </div>
+
+      <!-- Age -->
+      <div class="field">
+        <label for="dancerAge">Dancer's Age</label>
+        <input type="number" id="dancerAge" name="dancerAge" required min="7" placeholder="Age">
+      </div>
+
+      <!-- Emergency Contact -->
+      <div class="form-row">
+        <div class="field">
+          <label for="emergFirst">Emergency Contact First Name</label>
+          <input type="text" id="emergFirst" name="emergencyFirstName" required placeholder="First name">
+        </div>
+        <div class="field">
+          <label for="emergLast">Emergency Contact Last Name</label>
+          <input type="text" id="emergLast" name="emergencyLastName" required placeholder="Last name">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="emergRel">Emergency Contact Relationship</label>
+        <input type="text" id="emergRel" name="emergencyRelationship" required placeholder="e.g. Parent, Guardian">
+      </div>
+
+      <!-- Email & Phone -->
+      <div class="form-row">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required placeholder="you@example.com">
+        </div>
+        <div class="field">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" required placeholder="(555) 123-4567">
+        </div>
+      </div>
+
+      <!-- Waivers -->
+      <h3 class="waivers-heading">Waivers &amp; Agreements</h3>
+
+      <div class="waiver-card">
+        <p class="waiver-card__title">1. Release of Liability</p>
+        <p class="waiver-card__text">I hereby release, discharge, and hold harmless Hoodiez &amp; Expressions Dance Academy, its owners, instructors, employees, and agents from any and all claims, liabilities, or causes of action, known or unknown, arising out of myself or my child's participation in any activities or events related to Hoodiez or Expressions Dance Academy. This includes, but is not limited to, injuries, illnesses, or any other damages that may occur.</p>
+        <label><input type="checkbox" id="waiver1"> I Agree</label>
+      </div>
+
+      <div class="waiver-card">
+        <p class="waiver-card__title">2. Medical Emergencies</p>
+        <p class="waiver-card__text">In the event of an injury or illness, I authorize Hoodiez &amp; Expressions Dance Academy to seek medical treatment for my child if I am not present to do so. I understand that all reasonable efforts will be made to contact the parent/guardian in case of emergency. I understand that I will be responsible for any medical expenses incurred.</p>
+        <label><input type="checkbox" id="waiver2"> I Agree</label>
+      </div>
+
+      <div class="waiver-card">
+        <p class="waiver-card__title">3. Photo / Video Waiver</p>
+        <p class="waiver-card__text">I grant permission to Hoodiez &amp; Expressions Dance Academy to take and use photographs and videos of my child for promotional and educational purposes. This may include but is not limited to, use on social media and other marketing materials. I understand that these images may be used without compensation to my child or me.</p>
+        <label><input type="checkbox" id="waiver3"> I Agree</label>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn" disabled>Register &amp; Pay &mdash; $15</button>
+      <p class="submit-error" id="submitError"></p>
+    </form>
+  </section>
+
+  <footer class="footer">
+    &copy; 2026 Hoodiez &times; Expressions Dance Academy
+  </footer>
+
+</div>
+
+<script>
+  // ── Stars ──
+  (function() {
+    const field = document.getElementById('starfield');
+    const count = Math.min(120, Math.floor(window.innerWidth * window.innerHeight / 8000));
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 100 + '%';
+      s.style.setProperty('--dur', (2 + Math.random() * 4).toFixed(1) + 's');
+      s.style.setProperty('--max-opacity', (0.4 + Math.random() * 0.6).toFixed(2));
+      s.style.animationDelay = (Math.random() * 5).toFixed(1) + 's';
+      if (Math.random() > 0.7) s.style.width = s.style.height = '3px';
+      field.appendChild(s);
+    }
+  })();
+
+  // ── Fade-up on scroll ──
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // ── Form logic ──
+  const form = document.getElementById('regForm');
+  const btn = document.getElementById('submitBtn');
+  const errEl = document.getElementById('submitError');
+  const inputs = form.querySelectorAll('input[required]');
+  const checks = [document.getElementById('waiver1'), document.getElementById('waiver2'), document.getElementById('waiver3')];
+
+  function validate() {
+    const allFilled = [...inputs].every(i => i.value.trim() !== '');
+    const allChecked = checks.every(c => c.checked);
+    btn.disabled = !(allFilled && allChecked);
+  }
+
+  inputs.forEach(i => i.addEventListener('input', validate));
+  checks.forEach(c => c.addEventListener('change', validate));
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    errEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Processing\u2026';
+
+    const data = {
+      dancerFirstName: form.dancerFirstName.value.trim(),
+      dancerLastName: form.dancerLastName.value.trim(),
+      dancerAge: Number(form.dancerAge.value),
+      emergencyFirstName: form.emergencyFirstName.value.trim(),
+      emergencyLastName: form.emergencyLastName.value.trim(),
+      emergencyRelationship: form.emergencyRelationship.value.trim(),
+      email: form.email.value.trim(),
+      phone: form.phone.value.trim(),
+      liabilityAgreed: checks[0].checked,
+      medicalAgreed: checks[1].checked,
+      photoAgreed: checks[2].checked,
+      agreedAt: new Date().toISOString()
+    };
+
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Something went wrong');
+      window.location.href = json.url;
+    } catch (err) {
+      errEl.textContent = err.message;
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Register & Pay \u2014 $15';
+    }
+  });
+</script>
+
+</body>
+</html>
