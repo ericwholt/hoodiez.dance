@@ -236,24 +236,16 @@
       color: rgba(255, 255, 255, 0.25);
     }
 
-    .field-error {
+    .field-error, .age-error {
       display: none;
-      color: #f87171;
+      color: var(--pink-light);
       font-size: 0.85rem;
       margin-top: 0.35rem;
       font-weight: 500;
     }
 
-    .field-error.show {
+    .field-error.show, .age-error.show {
       display: block;
-    }
-
-    .age-error {
-      display: none;
-      color: #f87171;
-      font-size: 0.85rem;
-      margin-top: 0.35rem;
-      font-weight: 500;
     }
 
     .age-error.show {
@@ -261,8 +253,8 @@
     }
 
     .field input.invalid {
-      border-color: #f87171;
-      box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.15);
+      border-color: var(--pink);
+      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
     }
 
     /* ── Waivers ── */
@@ -432,47 +424,47 @@
       <div class="form-row">
         <div class="field">
           <label for="dancerFirst">Dancer's First Name</label>
-          <input type="text" id="dancerFirst" name="dancerFirstName" required placeholder="First name">
+          <input type="text" id="dancerFirst" name="dancerFirstName" required aria-required="true" placeholder="First name">
         </div>
         <div class="field">
           <label for="dancerLast">Dancer's Last Name</label>
-          <input type="text" id="dancerLast" name="dancerLastName" required placeholder="Last name">
+          <input type="text" id="dancerLast" name="dancerLastName" required aria-required="true" placeholder="Last name">
         </div>
       </div>
 
       <!-- Age -->
       <div class="field">
         <label for="dancerAge">Dancer's Age</label>
-        <input type="number" id="dancerAge" name="dancerAge" required min="7" step="1" placeholder="Age">
-        <p class="age-error" id="ageError">Must be 7 or older to register</p>
+        <input type="number" id="dancerAge" name="dancerAge" required aria-required="true" aria-describedby="ageError" min="7" step="1" placeholder="Age">
+        <p class="age-error" id="ageError" role="alert">Must be 7 or older to register</p>
       </div>
 
       <!-- Emergency Contact -->
       <div class="form-row">
         <div class="field">
           <label for="emergFirst">Emergency Contact First Name</label>
-          <input type="text" id="emergFirst" name="emergencyFirstName" required placeholder="First name">
+          <input type="text" id="emergFirst" name="emergencyFirstName" required aria-required="true" placeholder="First name">
         </div>
         <div class="field">
           <label for="emergLast">Emergency Contact Last Name</label>
-          <input type="text" id="emergLast" name="emergencyLastName" required placeholder="Last name">
+          <input type="text" id="emergLast" name="emergencyLastName" required aria-required="true" placeholder="Last name">
         </div>
       </div>
 
       <div class="field">
         <label for="emergRel">Emergency Contact Relationship</label>
-        <input type="text" id="emergRel" name="emergencyRelationship" required placeholder="e.g. Parent, Guardian">
+        <input type="text" id="emergRel" name="emergencyRelationship" required aria-required="true" placeholder="e.g. Parent, Guardian">
       </div>
 
       <!-- Email & Phone -->
       <div class="form-row">
         <div class="field">
           <label for="email">Email</label>
-          <input type="email" id="email" name="email" required placeholder="you@example.com">
+          <input type="email" id="email" name="email" required aria-required="true" placeholder="you@example.com">
         </div>
         <div class="field">
           <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" name="phone" required placeholder="(555) 123-4567">
+          <input type="tel" id="phone" name="phone" required aria-required="true" placeholder="(555) 123-4567">
         </div>
       </div>
 
@@ -561,9 +553,9 @@
 
   inputs.forEach(i => {
     i.addEventListener('input', function() {
-      // Clear error when user starts typing
       if (this.value.trim() !== '') {
         this.classList.remove('invalid');
+        this.setAttribute('aria-invalid', 'false');
         const err = this.parentElement.querySelector('.field-error');
         if (err) err.classList.remove('show');
       }
@@ -574,10 +566,12 @@
       this.dataset.touched = 'true';
       if (this.value.trim() === '') {
         this.classList.add('invalid');
+        this.setAttribute('aria-invalid', 'true');
         let err = this.parentElement.querySelector('.field-error');
         if (!err) {
           err = document.createElement('p');
           err.className = 'field-error';
+          err.setAttribute('role', 'alert');
           this.parentElement.appendChild(err);
         }
         err.textContent = 'Required';
