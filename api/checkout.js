@@ -42,14 +42,17 @@ module.exports = async function handler(req, res) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: 'Golden/Huntrix Dance Class',
-              description: 'Beginner K-pop Dance Class — April 18, 2026 — Expressions Dance Academy',
+              name: 'GOLDEN - HUNTR/X',
+              description: 'Get ready to dance! Hoodiez is partnering with Expressions Dance Studio for a fun, high-energy class where you\'ll learn choreography to "Golden" from K-Pop Demon Hunters. This class will be taught by Nessa, the choreographer and Isabella from the K-pop cover group Hoodiez, bringing their style, experience, and passion straight to the studio. Open to ages 7 and up, this is a beginners class that is perfect for K-pop fans and all dancers. Come ready to move, learn, and shine.',
             },
             unit_amount: 1500,
           },
           quantity: 1,
         },
       ],
+      payment_intent_data: {
+        description: 'GOLDEN - HUNTR/X Dance Class | Sat, April 18, 2026 | 11 AM - 12 PM | Expressions Dance Academy, 6710 Division Ave S, Grand Rapids, MI 49548',
+      },
       mode: 'payment',
       success_url: 'https://hoodiez.dance/thanks.html?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: 'https://hoodiez.dance/#register',
