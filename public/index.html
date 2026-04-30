@@ -704,6 +704,14 @@
       box-shadow: 3px 3px 0 0 var(--pink);
     }
 
+    .field input.filled {
+      background: #c7fffa;
+    }
+
+    .field input.filled:focus {
+      background: #c7fffa;
+    }
+
     .field input::placeholder {
       color: rgba(5, 5, 5, 0.4);
     }
@@ -1318,7 +1326,13 @@
 
   // Attach validation listeners to every text-like input — required state is dynamic
   form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]').forEach(i => {
+    function syncFilledState(input) {
+      input.classList.toggle('filled', input.value.trim() !== '');
+    }
+
+    syncFilledState(i);
     i.addEventListener('input', function() {
+      syncFilledState(this);
       if (this.value.trim() !== '') {
         this.classList.remove('invalid');
         this.setAttribute('aria-invalid', 'false');
@@ -1344,6 +1358,11 @@
         err.textContent = 'Required';
         err.classList.add('show');
       }
+    });
+  });
+  window.addEventListener('load', () => {
+    form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]').forEach(input => {
+      input.classList.toggle('filled', input.value.trim() !== '');
     });
   });
   checks.forEach(c => c.addEventListener('change', validate));
@@ -1403,11 +1422,18 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || 'Something went wrong');
+      let json = {};
+      try {
+        json = await res.json();
+      } catch (_) {
+        json = {};
+      }
+      if (!res.ok || !json.url) {
+        throw new Error('PAYMENT_UNAVAILABLE');
+      }
       window.location.href = json.url;
     } catch (err) {
-      errEl.textContent = err.message;
+      errEl.textContent = 'We could not start checkout right now. Please try again in a moment or contact Hoodiez if this keeps happening.';
       errEl.style.display = 'block';
       btn.disabled = false;
       btn.textContent = 'Register & Pay \u2014 $15';
