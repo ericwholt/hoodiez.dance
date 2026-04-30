@@ -6,19 +6,53 @@
   <title>You're Registered! - Hoodiez Dance Class</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+    :root {
+      --bg-deep: #050505;
+      --bg-mid: #30303c;
+      --mint: #00fce4;
+      --mint-light: #c0fcf0;
+      --cream: #fcf0c0;
+      --white: #ffffff;
+      --ink: #050505;
+      --shadow: 6px 6px 0 0 #6c9c9c;
+      --pixel-border: 3px solid var(--ink);
+    }
+
     body {
       font-family: 'Outfit', sans-serif;
-      background: #050505;
-      color: #ffffff;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(0, 252, 228, 0.08), transparent 45%),
+        radial-gradient(circle at 80% 80%, rgba(48, 48, 60, 0.35), transparent 45%),
+        var(--bg-deep);
+      color: var(--white);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      line-height: 1.6;
+      image-rendering: pixelated;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 0,
+        rgba(0, 0, 0, 0) 2px,
+        rgba(0, 0, 0, 0.08) 2px,
+        rgba(0, 0, 0, 0.08) 3px
+      );
+      mix-blend-mode: multiply;
+      opacity: 0.55;
     }
 
     .starfield {
@@ -30,13 +64,16 @@
 
     .star {
       position: absolute;
-      width: 2px;
-      height: 2px;
-      background: white;
-      border-radius: 50%;
-      animation: twinkle var(--dur, 3s) ease-in-out infinite alternate;
+      width: 3px;
+      height: 3px;
+      background: var(--mint-light);
+      box-shadow: 0 0 0 1px rgba(192, 252, 240, 0.18);
+      animation: twinkle var(--dur, 3s) steps(3) infinite alternate;
       opacity: 0;
     }
+
+    .star.pink { background: var(--mint-light); box-shadow: 0 0 0 1px rgba(192, 252, 240, 0.2); }
+    .star.cream { background: var(--cream); box-shadow: 0 0 0 1px rgba(252, 240, 192, 0.25); }
 
     @keyframes twinkle {
       0% { opacity: 0.1; transform: scale(0.8); }
@@ -48,7 +85,12 @@
       z-index: 1;
       text-align: center;
       max-width: 520px;
-      padding: 3rem 2rem;
+      padding: 2.25rem 1.75rem;
+      margin: 1.25rem;
+      background: var(--bg-mid);
+      border: 3px solid var(--mint);
+      border-radius: 0;
+      box-shadow: var(--shadow);
       animation: fadeIn 0.8s ease-out;
     }
 
@@ -58,9 +100,18 @@
     }
 
     .check {
-      font-size: 4rem;
+      width: 84px;
+      height: 84px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 2rem;
+      color: var(--ink);
+      background: var(--cream);
+      border: var(--pixel-border);
+      box-shadow: 4px 4px 0 0 var(--mint);
       margin-bottom: 1rem;
-      display: inline-block;
       animation: popIn 0.5s ease-out 0.3s both;
     }
 
@@ -71,46 +122,52 @@
     }
 
     h1 {
-      font-family: 'Dela Gothic One', sans-serif;
-      font-size: clamp(2rem, 5vw, 2.8rem);
-      background: linear-gradient(135deg, #00fce4 0%, #c0fcf0 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: clamp(1.25rem, 4vw, 2rem);
+      line-height: 1.3;
+      color: var(--cream);
+      text-shadow: 3px 3px 0 var(--ink);
       margin-bottom: 1rem;
     }
 
     .subtitle {
-      font-size: 1.15rem;
-      color: #fcf0c0;
+      font-size: 1.05rem;
+      color: var(--mint-light);
       font-weight: 600;
       margin-bottom: 0.75rem;
     }
 
     .address {
       font-size: 0.95rem;
-      color: #c0fcf0;
+      color: var(--cream);
       margin-bottom: 2rem;
       line-height: 1.5;
     }
 
     .back-link {
       display: inline-block;
-      padding: 0.75rem 2rem;
-      font-family: 'Outfit', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #ffffff;
-      background: linear-gradient(135deg, #30303c 0%, #6c9c9c 100%);
-      border-radius: 50px;
+      padding: 0.85rem 1.25rem;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.7rem;
+      color: var(--ink);
+      background: var(--mint);
+      border: var(--pixel-border);
+      border-radius: 0;
       text-decoration: none;
-      transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 20px rgba(108, 156, 156, 0.35);
+      transition: transform 0.08s linear, box-shadow 0.08s linear, background 0.15s;
+      box-shadow: 4px 4px 0 0 #6c9c9c;
+      text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
     }
 
     .back-link:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 28px rgba(108, 156, 156, 0.5);
+      background: var(--cream);
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 0 #6c9c9c;
+    }
+
+    .back-link:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 0 #6c9c9c;
     }
   </style>
 </head>
@@ -132,13 +189,15 @@
     const count = Math.min(100, Math.floor(window.innerWidth * window.innerHeight / 10000));
     for (let i = 0; i < count; i++) {
       const s = document.createElement('div');
-      s.className = 'star';
+      const tints = ['', 'pink', 'cream', '', '', ''];
+      const tint = tints[Math.floor(Math.random() * tints.length)];
+      s.className = 'star' + (tint ? ' ' + tint : '');
       s.style.left = Math.random() * 100 + '%';
       s.style.top = Math.random() * 100 + '%';
       s.style.setProperty('--dur', (2 + Math.random() * 4).toFixed(1) + 's');
       s.style.setProperty('--max-opacity', (0.4 + Math.random() * 0.6).toFixed(2));
       s.style.animationDelay = (Math.random() * 5).toFixed(1) + 's';
-      if (Math.random() > 0.7) s.style.width = s.style.height = '3px';
+      if (Math.random() > 0.7) s.style.width = s.style.height = '5px';
       field.appendChild(s);
     }
   })();
