@@ -25,6 +25,7 @@
       --green: #00fce4;
       --green-light: #c0fcf0;
       --gold: #fcf0c0;
+      --input-filled: #e6f2ff;
       --white: #ffffff;
       --white-muted: #c0fcf0;
       --ink: #050505; /* dark text on cream/mint cards */
@@ -704,12 +705,30 @@
       box-shadow: 3px 3px 0 0 var(--pink);
     }
 
-    .field input.filled {
-      background: var(--mint-light);
+    .field input.filled,
+    .field input:not(:placeholder-shown) {
+      background: var(--input-filled);
     }
 
-    .field input.filled:focus {
-      background: var(--mint-light);
+    .field input.filled:focus,
+    .field input:not(:placeholder-shown):focus {
+      background: var(--input-filled);
+    }
+
+    .field input:-webkit-autofill,
+    .field input:-webkit-autofill:hover,
+    .field input:-webkit-autofill:focus {
+      background-color: var(--input-filled) !important;
+      color: var(--ink) !important;
+      -webkit-text-fill-color: var(--ink) !important;
+      -webkit-box-shadow:
+        0 0 0 1000px var(--input-filled) inset,
+        3px 3px 0 0 var(--mint) !important;
+      box-shadow:
+        0 0 0 1000px var(--input-filled) inset,
+        3px 3px 0 0 var(--mint) !important;
+      caret-color: var(--ink) !important;
+      transition: background-color 999999s ease-in-out 0s;
     }
 
     .field input::placeholder {
@@ -1324,12 +1343,20 @@
     form[name].addEventListener('input', () => { if (signerSameCb.checked) applySameAsEmergency(); });
   });
 
-  // Attach validation listeners to every text-like input; required state is dynamic
-  form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]').forEach(i => {
-    function syncFilledState(input) {
-      input.classList.toggle('filled', input.value.trim() !== '');
-    }
+  const textInputs = Array.from(form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]'));
 
+  function syncFilledState(input) {
+    const filled = input.value.trim() !== '';
+    input.classList.toggle('filled', filled);
+    input.style.backgroundColor = filled ? 'var(--input-filled)' : '';
+  }
+
+  function syncAllFilledStates() {
+    textInputs.forEach(syncFilledState);
+  }
+
+  // Attach validation listeners to every text-like input; required state is dynamic
+  textInputs.forEach(i => {
     syncFilledState(i);
     i.addEventListener('input', function() {
       syncFilledState(this);
@@ -1341,7 +1368,12 @@
       }
       validate();
     });
+    i.addEventListener('change', function() {
+      syncFilledState(this);
+      validate();
+    });
     i.addEventListener('blur', function() {
+      syncFilledState(this);
       if (!this.hasAttribute('required')) return;
       if (this.dataset.touched) return;
       this.dataset.touched = 'true';
@@ -1361,9 +1393,15 @@
     });
   });
   window.addEventListener('load', () => {
-    form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]').forEach(input => {
-      input.classList.toggle('filled', input.value.trim() !== '');
-    });
+    syncAllFilledStates();
+    setTimeout(syncAllFilledStates, 250);
+    setTimeout(syncAllFilledStates, 1000);
+    let syncCount = 0;
+    const syncTimer = window.setInterval(() => {
+      syncAllFilledStates();
+      syncCount += 1;
+      if (syncCount >= 40) window.clearInterval(syncTimer);
+    }, 250);
   });
   checks.forEach(c => c.addEventListener('change', validate));
 
