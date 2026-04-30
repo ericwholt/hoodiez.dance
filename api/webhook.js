@@ -15,10 +15,10 @@ module.exports.config = { api: { bodyParser: false } };
 
 // Column layout must stay in sync with api/checkout.js SHEET_HEADERS
 const COL_REGISTRATION_ID = 'B';
-const COL_STATUS = 'R';
-const COL_PAYMENT_ID = 'S';
-const COL_AMOUNT = 'T';
-const COL_PAID_AT = 'U';
+const COL_STATUS = 'S';
+const COL_PAYMENT_ID = 'T';
+const COL_AMOUNT = 'U';
+const COL_PAID_AT = 'V';
 
 function getRawBody(req) {
   return new Promise((resolve, reject) => {

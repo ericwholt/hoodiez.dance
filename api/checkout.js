@@ -23,6 +23,8 @@ const REQUIRED_FIELDS = [
   'signature',
 ];
 
+const SIGNATURE_CELL_PART_LENGTH = 45000;
+
 const SHEET_HEADERS = [
   'Submitted At', 'Registration ID',
   'Dancer First Name', 'Dancer Last Name',
@@ -30,7 +32,8 @@ const SHEET_HEADERS = [
   'Email', 'Phone',
   'Emergency First Name', 'Emergency Last Name', 'Emergency Relationship', 'Emergency Phone',
   'Liability Agreed', 'Medical Agreed', 'Photo Agreed',
-  'Signature (PNG data URL)',
+  'Signature (PNG data URL) Part 1',
+  'Signature (PNG data URL) Part 2',
   'Status', 'Payment ID', 'Amount', 'Paid At',
 ];
 
@@ -45,6 +48,13 @@ function missingEnvVars() {
 
 function getStripeClient() {
   return Stripe(process.env.STRIPE_SECRET_KEY);
+}
+
+function splitSignature(signature) {
+  return [
+    signature.slice(0, SIGNATURE_CELL_PART_LENGTH),
+    signature.slice(SIGNATURE_CELL_PART_LENGTH),
+  ];
 }
 
 function getSheetsClient() {
@@ -135,6 +145,7 @@ module.exports = async function handler(req, res) {
 
     const registrationId = crypto.randomUUID();
     const quantity = 1;
+    const [signaturePart1, signaturePart2] = splitSignature(body.signature);
 
     // Write registration to Google Sheets BEFORE creating the Stripe session
     // so the signature (too large for Stripe metadata) and PII land in our sheet.
@@ -157,7 +168,8 @@ module.exports = async function handler(req, res) {
       String(body.liabilityAgreed),
       String(body.medicalAgreed),
       String(body.photoAgreed),
-      body.signature,
+      signaturePart1,
+      signaturePart2,
       'pending',
       '',
       '',
