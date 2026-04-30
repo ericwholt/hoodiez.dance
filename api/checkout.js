@@ -1,13 +1,73 @@
-// Requires STRIPE_SECRET_KEY environment variable set in Vercel project settings
+// Requires env vars set in Vercel:
+//   STRIPE_SECRET_KEY
+//   GOOGLE_SERVICE_ACCOUNT_EMAIL
+//   GOOGLE_PRIVATE_KEY
+//   GOOGLE_SHEET_ID
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const crypto = require('crypto');
+const { google } = require('googleapis');
 
 const REQUIRED_FIELDS = [
-  'dancerFirstName', 'dancerLastName', 'dancerAge',
-  'emergencyFirstName', 'emergencyLastName', 'emergencyRelationship',
+  'dancerFirstName', 'dancerLastName',
+  'signerRole', 'signerFirstName', 'signerLastName', 'signerRelationship',
+  'emergencyFirstName', 'emergencyLastName', 'emergencyRelationship', 'emergencyPhone',
   'email', 'phone',
-  'liabilityAgreed', 'medicalAgreed', 'photoAgreed', 'agreedAt'
+  'liabilityAgreed', 'medicalAgreed', 'photoAgreed', 'agreedAt',
+  'signature',
 ];
+
+const SHEET_HEADERS = [
+  'Submitted At', 'Registration ID',
+  'Dancer First Name', 'Dancer Last Name',
+  'Signer First Name', 'Signer Last Name', 'Signer Relationship',
+  'Email', 'Phone',
+  'Emergency First Name', 'Emergency Last Name', 'Emergency Relationship', 'Emergency Phone',
+  'Liability Agreed', 'Medical Agreed', 'Photo Agreed',
+  'Signature (PNG data URL)',
+  'Status', 'Payment ID', 'Amount', 'Paid At',
+];
+
+// A1 letter for a 1-indexed column. SHEET_HEADERS goes up to T (20), so 1-letter is sufficient.
+function colLetter(n) {
+  return String.fromCharCode(64 + n);
+}
+
+function getSheetsClient() {
+  const auth = new google.auth.GoogleAuth({
+    credentials: {
+      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    },
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  });
+  return google.sheets({ version: 'v4', auth });
+}
+
+async function ensureHeaders(sheets, sheetId) {
+  const range = `Sheet1!A1:${colLetter(SHEET_HEADERS.length)}1`;
+  const existing = await sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range });
+  if (!existing.data.values || existing.data.values.length === 0) {
+    await sheets.spreadsheets.values.update({
+      spreadsheetId: sheetId,
+      range,
+      valueInputOption: 'RAW',
+      requestBody: { values: [SHEET_HEADERS] },
+    });
+  }
+}
+
+async function appendRegistration(row) {
+  const sheets = getSheetsClient();
+  const sheetId = process.env.GOOGLE_SHEET_ID;
+  await ensureHeaders(sheets, sheetId);
+  await sheets.spreadsheets.values.append({
+    spreadsheetId: sheetId,
+    range: `Sheet1!A:${colLetter(SHEET_HEADERS.length)}`,
+    valueInputOption: 'RAW',
+    insertDataOption: 'INSERT_ROWS',
+    requestBody: { values: [row] },
+  });
+}
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', 'https://hoodiez.dance');
@@ -25,7 +85,7 @@ module.exports = async function handler(req, res) {
   try {
     const body = req.body;
 
-    // Honeypot check — if this hidden field has a value, it's a bot
+    // Honeypot — if this hidden field has a value, treat as bot
     if (body._hp) {
       return res.status(200).json({ url: 'https://hoodiez.dance/thanks.html' });
     }
@@ -40,8 +100,43 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'All waivers must be agreed to' });
     }
 
-    // Generate a registration ID to minimize PII stored in Stripe
+    if (typeof body.signature !== 'string' || !body.signature.startsWith('data:image/')) {
+      return res.status(400).json({ error: 'Invalid signature' });
+    }
+
+    if (body.signerRole !== 'self' && body.signerRole !== 'guardian') {
+      return res.status(400).json({ error: 'Invalid signer role' });
+    }
+
     const registrationId = crypto.randomUUID();
+
+    // Write registration to Google Sheets BEFORE creating the Stripe session
+    // so the signature (too large for Stripe metadata) and PII land in our sheet.
+    // Status starts as "pending" and is updated by the webhook on payment success.
+    const submittedAt = new Date().toISOString();
+    await appendRegistration([
+      submittedAt,
+      registrationId,
+      body.dancerFirstName,
+      body.dancerLastName,
+      body.signerFirstName,
+      body.signerLastName,
+      body.signerRelationship,
+      body.email,
+      body.phone,
+      body.emergencyFirstName,
+      body.emergencyLastName,
+      body.emergencyRelationship,
+      body.emergencyPhone,
+      String(body.liabilityAgreed),
+      String(body.medicalAgreed),
+      String(body.photoAgreed),
+      body.signature,
+      'pending',
+      '',
+      '',
+      '',
+    ]);
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -51,8 +146,8 @@ module.exports = async function handler(req, res) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: 'GOLDEN - HUNTR/X',
-              description: 'Get ready to dance! Hoodiez is partnering with Expressions Dance Studio for a fun, high-energy class where you\'ll learn choreography to "Golden" from K-Pop Demon Hunters. This class will be taught by Nessa Maria, the choreographer and Isabella from the K-pop cover group Hoodiez, bringing their style, experience, and passion straight to the studio. Open to ages 7 and up, this is a beginners class that is perfect for K-pop fans and all dancers. Come ready to move, learn, and shine.',
+              name: 'Mystery K-Pop Dance Class',
+              description: 'Mystery K-Pop dance class with Hoodiez. Guess the song on Instagram for a chance to win a K-pop album. All levels, ages 13+.',
             },
             unit_amount: 1500,
           },
@@ -60,30 +155,18 @@ module.exports = async function handler(req, res) {
         },
       ],
       payment_intent_data: {
-        description: 'GOLDEN - HUNTR/X Dance Class | Sat, April 18, 2026, 11 AM - 12 PM | Expressions Dance Academy | 6710 Division Ave S, Grand Rapids, MI 49548',
+        description: 'Mystery K-Pop Dance Class | Thu, May 14, 2026, 7-8 PM | Moveir Dance Studio | 2485 Burlingame Ave SW, Wyoming, MI',
       },
       mode: 'payment',
       success_url: 'https://hoodiez.dance/thanks.html?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: 'https://hoodiez.dance/#register',
-      metadata: {
-        registrationId,
-        dancerFirstName: body.dancerFirstName,
-        dancerLastName: body.dancerLastName,
-        dancerAge: String(body.dancerAge),
-        emergencyFirstName: body.emergencyFirstName,
-        emergencyLastName: body.emergencyLastName,
-        emergencyRelationship: body.emergencyRelationship,
-        phone: body.phone,
-        liabilityAgreed: String(body.liabilityAgreed),
-        medicalAgreed: String(body.medicalAgreed),
-        photoAgreed: String(body.photoAgreed),
-        agreedAt: body.agreedAt,
-      },
+      // Only the registrationId is sent to Stripe — PII stays in our sheet.
+      metadata: { registrationId },
     });
 
     return res.status(200).json({ url: session.url });
   } catch (err) {
-    console.error('Stripe checkout error:', err);
+    console.error('Checkout error:', err);
     return res.status(500).json({ error: 'Failed to create checkout session' });
   }
 };

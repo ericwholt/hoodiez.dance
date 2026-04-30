@@ -1,4 +1,5 @@
-// Stripe webhook → Google Sheets, then clear PII from Stripe metadata
+// Stripe webhook → updates the existing Google Sheet row (created by /api/checkout)
+// with payment status, payment intent, amount, and paid-at timestamp.
 // Env vars needed:
 //   STRIPE_SECRET_KEY
 //   STRIPE_WEBHOOK_SECRET
@@ -12,6 +13,13 @@ const { google } = require('googleapis');
 // Disable Vercel's automatic body parsing so we can verify the Stripe signature
 module.exports.config = { api: { bodyParser: false } };
 
+// Column layout must stay in sync with api/checkout.js SHEET_HEADERS
+const COL_REGISTRATION_ID = 'B';
+const COL_STATUS = 'R';
+const COL_PAYMENT_ID = 'S';
+const COL_AMOUNT = 'T';
+const COL_PAID_AT = 'U';
+
 function getRawBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -21,7 +29,7 @@ function getRawBody(req) {
   });
 }
 
-async function appendToSheet(row) {
+function getSheetsClient() {
   const auth = new google.auth.GoogleAuth({
     credentials: {
       client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
@@ -29,50 +37,44 @@ async function appendToSheet(row) {
     },
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
   });
+  return google.sheets({ version: 'v4', auth });
+}
 
-  const sheets = google.sheets({ version: 'v4', auth });
-  const sheetId = process.env.GOOGLE_SHEET_ID;
-
-  // Check if headers exist, add them if sheet is empty
-  const existing = await sheets.spreadsheets.values.get({
+async function findRowByRegistrationId(sheets, sheetId, registrationId) {
+  const result = await sheets.spreadsheets.values.get({
     spreadsheetId: sheetId,
-    range: 'Sheet1!A1:L1',
+    range: `Sheet1!${COL_REGISTRATION_ID}:${COL_REGISTRATION_ID}`,
   });
-
-  if (!existing.data.values || existing.data.values.length === 0) {
-    await sheets.spreadsheets.values.update({
-      spreadsheetId: sheetId,
-      range: 'Sheet1!A1:L1',
-      valueInputOption: 'RAW',
-      requestBody: {
-        values: [[
-          'Timestamp',
-          'Registration ID',
-          'Dancer First Name',
-          'Dancer Last Name',
-          'Dancer Age',
-          'Emergency First Name',
-          'Emergency Last Name',
-          'Emergency Relationship',
-          'Email',
-          'Phone',
-          'Payment ID',
-          'Amount',
-        ]],
-      },
-    });
+  const rows = result.data.values || [];
+  for (let i = 1; i < rows.length; i++) {
+    if (rows[i] && rows[i][0] === registrationId) {
+      return i + 1; // 1-indexed sheet row
+    }
   }
+  return -1;
+}
 
-  // Append the registration row
-  await sheets.spreadsheets.values.append({
+async function markPaid({ registrationId, paymentIntent, amount, paidAt }) {
+  const sheets = getSheetsClient();
+  const sheetId = process.env.GOOGLE_SHEET_ID;
+  const rowIndex = await findRowByRegistrationId(sheets, sheetId, registrationId);
+  if (rowIndex === -1) {
+    console.error('Webhook: registrationId not found in sheet:', registrationId);
+    return false;
+  }
+  await sheets.spreadsheets.values.batchUpdate({
     spreadsheetId: sheetId,
-    range: 'Sheet1!A:L',
-    valueInputOption: 'RAW',
-    insertDataOption: 'INSERT_ROWS',
     requestBody: {
-      values: [row],
+      valueInputOption: 'RAW',
+      data: [
+        { range: `Sheet1!${COL_STATUS}${rowIndex}`, values: [['paid']] },
+        { range: `Sheet1!${COL_PAYMENT_ID}${rowIndex}`, values: [[paymentIntent]] },
+        { range: `Sheet1!${COL_AMOUNT}${rowIndex}`, values: [[amount]] },
+        { range: `Sheet1!${COL_PAID_AT}${rowIndex}`, values: [[paidAt]] },
+      ],
     },
   });
+  return true;
 }
 
 module.exports = async function handler(req, res) {
@@ -93,47 +95,22 @@ module.exports = async function handler(req, res) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    const meta = session.metadata || {};
-
-    const row = [
-      new Date().toISOString(),
-      meta.registrationId || '',
-      meta.dancerFirstName || '',
-      meta.dancerLastName || '',
-      meta.dancerAge || '',
-      meta.emergencyFirstName || '',
-      meta.emergencyLastName || '',
-      meta.emergencyRelationship || '',
-      session.customer_email || '',
-      meta.phone || '',
-      session.payment_intent || '',
-      (session.amount_total / 100).toFixed(2),
-    ];
+    const registrationId = (session.metadata || {}).registrationId;
+    if (!registrationId) {
+      console.error('Webhook: session has no registrationId metadata');
+      return res.status(200).json({ received: true });
+    }
 
     try {
-      await appendToSheet(row);
-      console.log('Registration added to Google Sheet');
-
-      // Clear PII from Stripe metadata — keep only registrationId
-      await stripe.checkout.sessions.update(session.id, {
-        metadata: {
-          registrationId: meta.registrationId || '',
-          dancerFirstName: '',
-          dancerLastName: '',
-          dancerAge: '',
-          emergencyFirstName: '',
-          emergencyLastName: '',
-          emergencyRelationship: '',
-          phone: '',
-          liabilityAgreed: '',
-          medicalAgreed: '',
-          photoAgreed: '',
-          agreedAt: '',
-        },
+      await markPaid({
+        registrationId,
+        paymentIntent: session.payment_intent || '',
+        amount: (session.amount_total / 100).toFixed(2),
+        paidAt: new Date().toISOString(),
       });
-      console.log('PII cleared from Stripe metadata');
+      console.log('Registration marked paid:', registrationId);
     } catch (err) {
-      console.error('Failed to process registration:', err);
+      console.error('Failed to mark registration paid:', err);
     }
   }
 

@@ -3,37 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Golden/Huntrix Dance Class — Hoodiez × Expressions</title>
-  <meta name="description" content="Beginner K-pop dance class. Learn choreography to Golden from K-Pop Demon Hunters. April 18, 2026 at Expressions Dance Academy, Grand Rapids.">
+  <title>Mystery K-Pop Dance Class — Hoodiez</title>
+  <meta name="description" content="Mystery K-pop dance class with a chance to win a K-pop album. May 14, 2026 at Moveir Dance Studio in Wyoming, MI. All levels, ages 13+, $15.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;700&family=Outfit:wght@300;400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg-deep: #0d0b1a;
-      --bg-mid: #161230;
-      --bg-card: #1e1848;
-      --pink: #ec4899;
-      --pink-light: #f472b6;
+      /* Palette pulled from the hero video */
+      --bg-deep: #0a0822;
+      --bg-mid: #16104a;
+      --bg-card: #1f1657;
+      --mint: #7ee3d2;
+      --mint-light: #a6efe1;
+      --pink: #ff4d8a;
+      --pink-light: #ff7eb3;
+      --cream: #fde68a;
+      --cream-light: #fef3c7;
       --green: #34d399;
       --green-light: #4ade80;
-      --gold: #fbbf24;
+      --gold: #fcd34d;
       --white: #ffffff;
       --white-muted: #c4b5d4;
-      --purple-glow: rgba(139, 92, 246, 0.3);
+      --ink: #1a1240; /* dark text on cream/mint cards */
+      /* Pixel-game tokens */
+      --pixel-shadow-pink: 6px 6px 0 0 #d63375;
+      --pixel-shadow-mint: 6px 6px 0 0 #2fa595;
+      --pixel-shadow-cream: 6px 6px 0 0 #d6a233;
+      --pixel-shadow-ink: 4px 4px 0 0 #0a0822;
+      --pixel-border: 3px solid var(--ink);
     }
+
+    /* 8-bit utility: pixel font + crisp rendering */
+    .pixel { font-family: 'Press Start 2P', system-ui, monospace; letter-spacing: 0.02em; }
 
     html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Outfit', sans-serif;
-      background: var(--bg-deep);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(126, 227, 210, 0.08), transparent 45%),
+        radial-gradient(circle at 80% 80%, rgba(255, 77, 138, 0.08), transparent 45%),
+        var(--bg-deep);
       color: var(--white);
       min-height: 100vh;
       overflow-x: hidden;
       line-height: 1.6;
+      image-rendering: pixelated;
+    }
+
+    /* CRT scanline overlay — subtle */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 0,
+        rgba(0, 0, 0, 0) 2px,
+        rgba(0, 0, 0, 0.08) 2px,
+        rgba(0, 0, 0, 0.08) 3px
+      );
+      mix-blend-mode: multiply;
+      opacity: 0.55;
     }
 
     /* ── Starfield background ── */
@@ -47,13 +83,15 @@
 
     .star {
       position: absolute;
-      width: 2px;
-      height: 2px;
-      background: white;
-      border-radius: 50%;
-      animation: twinkle var(--dur, 3s) ease-in-out infinite alternate;
+      width: 3px;
+      height: 3px;
+      background: var(--mint-light);
+      box-shadow: 0 0 0 1px rgba(126, 227, 210, 0.18);
+      animation: twinkle var(--dur, 3s) steps(3) infinite alternate;
       opacity: 0;
     }
+    .star.pink { background: var(--pink-light); box-shadow: 0 0 0 1px rgba(255, 126, 179, 0.2); }
+    .star.cream { background: var(--cream); box-shadow: 0 0 0 1px rgba(253, 230, 138, 0.25); }
 
     @keyframes twinkle {
       0% { opacity: 0.1; transform: scale(0.8); }
@@ -91,8 +129,13 @@
       display: block;
       width: 100%;
       height: auto;
-      border-radius: 12px;
-      box-shadow: 0 4px 40px rgba(139, 92, 246, 0.2);
+      border: 4px solid var(--ink);
+      border-radius: 0;
+      box-shadow:
+        0 0 0 4px var(--mint),
+        0 0 0 8px var(--ink),
+        var(--pixel-shadow-pink);
+      image-rendering: pixelated;
     }
 
     .hero__cta-row {
@@ -101,23 +144,30 @@
 
     .cta-btn {
       display: inline-block;
-      padding: 1rem 2.5rem;
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--white);
-      background: linear-gradient(135deg, var(--pink) 0%, #a855f7 100%);
-      border: none;
-      border-radius: 50px;
+      padding: 0.95rem 1.75rem;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+      background: var(--cream);
+      border: var(--pixel-border);
+      border-radius: 0;
       cursor: pointer;
       text-decoration: none;
-      transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 24px rgba(236, 72, 153, 0.4);
+      transition: transform 0.08s linear, box-shadow 0.08s linear, background 0.15s;
+      box-shadow: var(--pixel-shadow-pink);
+      text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
     }
 
     .cta-btn:hover {
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 6px 32px rgba(236, 72, 153, 0.55);
+      background: var(--mint);
+      transform: translate(-2px, -2px);
+      box-shadow: 8px 8px 0 0 #d63375;
+    }
+
+    .cta-btn:active {
+      transform: translate(4px, 4px);
+      box-shadow: 2px 2px 0 0 #d63375;
     }
 
     /* ── Info Chips ── */
@@ -132,25 +182,27 @@
     .chip {
       display: inline-flex;
       align-items: center;
-      gap: 0.45rem;
-      padding: 0.5rem 1.1rem;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: var(--white);
-      backdrop-filter: blur(4px);
+      gap: 0.5rem;
+      padding: 0.55rem 0.9rem;
+      background: var(--bg-mid);
+      border: 2px solid var(--mint);
+      border-radius: 0;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.04em;
+      color: var(--mint-light);
+      box-shadow: 3px 3px 0 0 var(--ink);
     }
 
     .chip--green {
-      border-color: rgba(52, 211, 153, 0.3);
-      color: var(--green-light);
+      border-color: var(--cream);
+      color: var(--cream);
+      box-shadow: 3px 3px 0 0 var(--ink);
     }
 
     .chip svg {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       flex-shrink: 0;
     }
 
@@ -167,23 +219,414 @@
 
     .description p:last-child { margin-bottom: 0; }
 
-    .highlight { color: var(--pink-light); font-weight: 600; }
+    .highlight {
+      color: var(--mint-light);
+      font-weight: 700;
+      text-shadow: 2px 2px 0 var(--ink);
+    }
+    .highlight--pink { color: var(--pink-light); text-shadow: 2px 2px 0 var(--ink); }
+
+    /* ── Mystery Prize Card ── */
+    .mystery-card {
+      position: relative;
+      margin: 2.5rem 0;
+      padding: 1.75rem 1.5rem 1.5rem;
+      background: var(--mint);
+      color: var(--ink);
+      border: var(--pixel-border);
+      border-radius: 0;
+      box-shadow: var(--pixel-shadow-pink);
+      overflow: hidden;
+    }
+
+    .mystery-card::before {
+      content: '?';
+      position: absolute;
+      top: -2.5rem;
+      right: -1.25rem;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 11rem;
+      line-height: 1;
+      color: rgba(26, 18, 64, 0.16);
+      pointer-events: none;
+    }
+
+    /* corner pixel decorations */
+    .mystery-card::after {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      width: 8px;
+      height: 8px;
+      background: var(--pink);
+      box-shadow:
+        14px 0 0 var(--pink),
+        0 14px 0 var(--pink);
+    }
+
+    .mystery-card__eyebrow {
+      display: inline-block;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--ink);
+      background: var(--pink);
+      padding: 0.4rem 0.7rem;
+      border: 2px solid var(--ink);
+      box-shadow: 3px 3px 0 0 var(--ink);
+      margin-bottom: 1rem;
+    }
+
+    .mystery-card__title {
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 1.4rem;
+      line-height: 1.2;
+      margin-bottom: 0.85rem;
+      color: var(--ink);
+      text-shadow: 3px 3px 0 var(--pink-light);
+    }
+
+    .mystery-card__text {
+      color: var(--ink);
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+      font-weight: 500;
+    }
+
+    .mystery-card__text strong { color: #b91c5c; }
+
+    .mystery-card__ig {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.7rem 1rem;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.7rem;
+      color: var(--cream-light);
+      text-decoration: none;
+      background: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      transition: transform 0.08s linear, box-shadow 0.08s linear;
+      box-shadow: 4px 4px 0 0 var(--pink);
+    }
+
+    .mystery-card__ig:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 0 var(--pink);
+    }
+
+    .mystery-card__ig:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 0 var(--pink);
+    }
+
+    .mystery-card__ig svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ── Signer toggle ── */
+    .signer-toggle {
+      border: 2px solid var(--mint);
+      border-radius: 0;
+      padding: 1rem 1rem 0.85rem;
+      margin: 0.25rem 0 1.25rem;
+      background: var(--bg-mid);
+      box-shadow: 3px 3px 0 0 var(--ink);
+    }
+
+    .signer-toggle__legend {
+      display: inline-block;
+      padding: 0.35rem 0.6rem;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.04em;
+      border: 2px solid var(--ink);
+      box-shadow: 2px 2px 0 0 var(--ink);
+    }
+
+    .signer-toggle__legend .req { color: var(--pink); }
+
+    .signer-toggle.invalid {
+      border-color: var(--pink);
+      box-shadow: 3px 3px 0 0 var(--pink);
+    }
+
+    .signer-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      padding: 0.6rem 0.5rem;
+      cursor: pointer;
+      border-top: 1px dashed rgba(126, 227, 210, 0.25);
+      margin-top: 0.6rem;
+    }
+    .signer-option:first-of-type { border-top: 0; margin-top: 0.75rem; }
+
+    .signer-option input[type="radio"] {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      background: var(--cream-light);
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      box-shadow: 2px 2px 0 0 var(--ink);
+      cursor: pointer;
+      position: relative;
+    }
+    .signer-option input[type="radio"]:checked { background: var(--pink); }
+    .signer-option input[type="radio"]:checked::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      background: var(--ink);
+    }
+
+    .signer-option strong {
+      display: block;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.62rem;
+      color: var(--mint-light);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.2rem;
+    }
+    .signer-option em {
+      font-style: normal;
+      font-size: 0.82rem;
+      color: var(--white-muted);
+    }
+
+    /* Signer details reveal */
+    .signer-details {
+      margin: -0.25rem 0 1rem;
+      padding: 1rem;
+      background: rgba(255, 77, 138, 0.08);
+      border: 2px dashed var(--pink);
+    }
+
+    /* "Same as Emergency Contact" pixel checkbox row */
+    .signer-same {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 0 0 1rem;
+      cursor: pointer;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.04em;
+      color: var(--cream);
+    }
+
+    .signer-same input[type="checkbox"] {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      background: var(--cream-light);
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 0 var(--ink);
+      position: relative;
+    }
+
+    .signer-same input[type="checkbox"]:checked { background: var(--mint); }
+
+    .signer-same input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 5px;
+      width: 5px;
+      height: 10px;
+      border: solid var(--ink);
+      border-width: 0 3px 3px 0;
+      transform: rotate(45deg);
+    }
+
+    /* Auto-filled (disabled) inputs/select look slightly muted */
+    .field input:disabled,
+    .pixel-select:disabled {
+      background: #efe7c2;
+      color: #6b6080;
+      cursor: not-allowed;
+      box-shadow: 3px 3px 0 0 rgba(126, 227, 210, 0.5);
+    }
+
+    /* Pixel-styled select */
+    .pixel-select {
+      width: 100%;
+      padding: 0.7rem 0.85rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      color: var(--ink);
+      background: var(--cream-light);
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      box-shadow: 3px 3px 0 0 var(--mint);
+      appearance: none;
+      cursor: pointer;
+      background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%),
+                        linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+      background-position: calc(100% - 18px) 50%, calc(100% - 12px) 50%;
+      background-size: 6px 6px;
+      background-repeat: no-repeat;
+    }
+    .pixel-select:focus { outline: none; box-shadow: 3px 3px 0 0 var(--pink); }
+
+    /* ── Friendly age note inside form ── */
+    .age-note {
+      margin: 0.5rem 0 1.75rem;
+      padding: 0.95rem 1rem;
+      background: var(--cream);
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      box-shadow: 4px 4px 0 0 var(--mint);
+      font-size: 0.85rem;
+      line-height: 1.5;
+      font-weight: 500;
+    }
+
+    .age-note strong {
+      display: block;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.65rem;
+      color: #b91c5c;
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Signature pad ── */
+    .signature-block {
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    .signature-block__label {
+      display: block;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.7rem;
+      color: var(--mint-light);
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.04em;
+    }
+
+    .signature-block__label::after {
+      content: ' *';
+      color: var(--pink);
+    }
+
+    .signature-block__hint {
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 0.6rem;
+    }
+
+    .signature-pad-wrap {
+      position: relative;
+      background: #fdfcf5;
+      border: 3px solid var(--ink);
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: 4px 4px 0 0 var(--mint);
+      transition: box-shadow 0.15s;
+    }
+
+    .signature-pad-wrap.invalid {
+      box-shadow: 4px 4px 0 0 var(--pink);
+    }
+
+    .signature-pad {
+      display: block;
+      width: 100%;
+      height: 160px;
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    .signature-baseline {
+      position: absolute;
+      left: 1rem;
+      right: 1rem;
+      bottom: 2rem;
+      border-top: 1px dashed rgba(15, 23, 42, 0.25);
+      pointer-events: none;
+    }
+
+    .signature-x {
+      position: absolute;
+      left: 1rem;
+      bottom: 2.05rem;
+      color: rgba(15, 23, 42, 0.45);
+      font-family: 'Caveat', cursive;
+      font-size: 1.4rem;
+      pointer-events: none;
+      transform: translateY(50%);
+    }
+
+    .signature-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+
+    .signature-clear {
+      background: var(--bg-mid);
+      border: 2px solid var(--mint);
+      color: var(--mint-light);
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.05em;
+      padding: 0.55rem 0.9rem;
+      border-radius: 0;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 0 var(--ink);
+      transition: transform 0.08s linear, box-shadow 0.08s linear;
+    }
+
+    .signature-clear:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0 0 var(--ink);
+    }
+
+    .signature-clear:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 0 var(--ink);
+    }
+
+    .signature-typed {
+      font-family: 'Caveat', cursive;
+      font-size: 1.1rem;
+      color: var(--cream);
+      opacity: 0.85;
+    }
 
     /* ── Form Card ── */
     .form-card {
+      position: relative;
       background: var(--bg-card);
-      border: 1px solid rgba(139, 92, 246, 0.25);
-      border-radius: 16px;
-      padding: 2.5rem 2rem;
-      box-shadow: 0 0 40px rgba(139, 92, 246, 0.08), 0 0 80px rgba(139, 92, 246, 0.04);
+      border: var(--pixel-border);
+      border-color: var(--mint);
+      border-radius: 0;
+      padding: 2.25rem 1.75rem;
+      box-shadow: var(--pixel-shadow-mint);
       margin-top: 3rem;
     }
 
     .form-card__title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.6rem;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 1.05rem;
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
+      color: var(--cream);
+      text-shadow: 3px 3px 0 var(--pink);
     }
 
     .form-row {
@@ -202,162 +645,221 @@
 
     .field label {
       display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--white-muted);
-      margin-bottom: 0.4rem;
-      letter-spacing: 0.03em;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.62rem;
+      font-weight: 400;
+      color: var(--mint-light);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.04em;
     }
 
     .field label::after {
-      content: ' *';
+      content: '\00A0*';
       color: var(--pink);
+      white-space: nowrap;
+    }
+
+    /* Section sub-heading inside the form */
+    .section-heading {
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      color: var(--cream);
+      margin: 1.5rem 0 0.4rem;
+      text-shadow: 2px 2px 0 var(--pink);
+    }
+
+    .section-hint {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.55);
+      margin: 0 0 0.85rem;
+      line-height: 1.4;
     }
 
     .field input {
       width: 100%;
-      padding: 0.75rem 1rem;
+      padding: 0.7rem 0.85rem;
       font-family: 'Outfit', sans-serif;
-      font-size: 1rem;
-      color: var(--white);
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 10px;
+      font-size: 0.95rem;
+      color: var(--ink);
+      background: var(--cream-light);
+      border: 2px solid var(--ink);
+      border-radius: 0;
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: box-shadow 0.1s, background 0.15s;
+      box-shadow: 3px 3px 0 0 var(--mint);
     }
 
     .field input:focus {
-      border-color: var(--pink);
-      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15);
+      background: #ffffff;
+      box-shadow: 3px 3px 0 0 var(--pink);
     }
 
     .field input::placeholder {
-      color: rgba(255, 255, 255, 0.25);
+      color: rgba(26, 18, 64, 0.4);
     }
 
-    .field-error, .age-error {
+    .field-error {
       display: none;
       color: var(--pink-light);
-      font-size: 0.85rem;
-      margin-top: 0.35rem;
-      font-weight: 500;
+      font-size: 0.78rem;
+      margin-top: 0.4rem;
+      font-weight: 600;
     }
 
-    .field-error.show, .age-error.show {
-      display: block;
-    }
-
-    .age-error.show {
+    .field-error.show {
       display: block;
     }
 
     .field input.invalid {
-      border-color: var(--pink);
-      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
+      box-shadow: 3px 3px 0 0 var(--pink);
     }
 
     /* ── Waivers ── */
     .waivers-heading {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.2rem;
-      color: var(--gold);
-      margin: 2rem 0 1rem;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.85rem;
+      color: var(--cream);
+      margin: 2.25rem 0 1.25rem;
       text-align: center;
+      text-shadow: 2px 2px 0 var(--pink);
+      letter-spacing: 0.04em;
     }
 
     .waiver-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 1.25rem 1.25rem 1rem;
+      background: var(--bg-mid);
+      border: 2px solid var(--mint);
+      border-radius: 0;
+      padding: 1.1rem 1.1rem 1rem;
       margin-bottom: 1rem;
+      box-shadow: 3px 3px 0 0 var(--ink);
     }
 
     .waiver-card__title {
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: var(--gold);
-      margin-bottom: 0.5rem;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-weight: 400;
+      font-size: 0.7rem;
+      color: var(--cream);
+      margin-bottom: 0.65rem;
+      letter-spacing: 0.04em;
     }
 
     .waiver-card__text {
-      font-size: 0.85rem;
+      font-size: 0.83rem;
       color: var(--white-muted);
       line-height: 1.55;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.85rem;
     }
 
     .waiver-card label {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--green-light);
+      gap: 0.55rem;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.65rem;
+      color: var(--mint-light);
       cursor: pointer;
+      letter-spacing: 0.04em;
     }
 
     .waiver-card input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--green);
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      background: var(--cream-light);
+      border: 2px solid var(--ink);
+      border-radius: 0;
       cursor: pointer;
       flex-shrink: 0;
+      box-shadow: 2px 2px 0 0 var(--ink);
+      position: relative;
     }
 
-    /* ── Submit Button ── */
+    .waiver-card input[type="checkbox"]:checked {
+      background: var(--mint);
+    }
+
+    .waiver-card input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 6px;
+      width: 5px;
+      height: 10px;
+      border: solid var(--ink);
+      border-width: 0 3px 3px 0;
+      transform: rotate(45deg);
+    }
+
+    /* ── Submit Button (PIXEL "START") ── */
     .submit-btn {
       display: block;
       width: 100%;
       margin-top: 2rem;
-      padding: 1.1rem;
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--white);
-      background: linear-gradient(135deg, var(--green) 0%, #059669 100%);
-      border: none;
-      border-radius: 12px;
+      padding: 1.05rem 1rem;
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      color: var(--ink);
+      background: var(--mint);
+      border: var(--pixel-border);
+      border-radius: 0;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
-      box-shadow: 0 4px 24px rgba(52, 211, 153, 0.3);
+      transition: transform 0.08s linear, box-shadow 0.08s linear, opacity 0.2s, background 0.2s;
+      box-shadow: var(--pixel-shadow-pink);
+      text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
     }
 
     .submit-btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 32px rgba(52, 211, 153, 0.5);
+      background: var(--cream);
+      transform: translate(-2px, -2px);
+      box-shadow: 8px 8px 0 0 #d63375;
+    }
+
+    .submit-btn:active:not(:disabled) {
+      transform: translate(4px, 4px);
+      box-shadow: 2px 2px 0 0 #d63375;
     }
 
     .submit-btn:disabled {
-      opacity: 0.4;
+      opacity: 0.45;
       cursor: not-allowed;
       transform: none;
-      box-shadow: none;
+      background: #4d4577;
+      color: rgba(255, 255, 255, 0.55);
+      text-shadow: none;
+      box-shadow: 4px 4px 0 0 var(--ink);
     }
 
     .submit-error {
       text-align: center;
-      color: #f87171;
-      font-size: 0.9rem;
+      color: var(--pink-light);
+      font-size: 0.85rem;
       margin-top: 0.75rem;
       display: none;
+      font-weight: 600;
     }
 
     /* ── Footer ── */
     .footer {
       text-align: center;
       padding: 3rem 0 1rem;
-      color: var(--white-muted);
-      font-size: 0.8rem;
-      opacity: 0.6;
+      color: var(--mint-light);
+      font-family: 'Press Start 2P', system-ui, monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.05em;
+      opacity: 0.7;
     }
 
     /* ── Mobile tweaks ── */
     @media (max-width: 600px) {
       .container { padding: 1.25rem 1rem 3rem; }
-      .hero video { border-radius: 8px; }
-      .form-card { padding: 1.75rem 1.25rem; }
+      .form-card { padding: 1.75rem 1.1rem; }
+      .mystery-card__title { font-size: 1.1rem; }
+      .form-card__title { font-size: 0.9rem; }
+      .submit-btn { font-size: 0.75rem; padding: 0.95rem 0.75rem; }
+      .chip { font-size: 0.55rem; padding: 0.45rem 0.7rem; }
+      .waivers-heading { font-size: 0.75rem; }
     }
   </style>
 </head>
@@ -381,19 +883,19 @@
   <div class="chips fade-up">
     <span class="chip">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      Sat, April 18, 2026
+      Thu, May 14, 2026
     </span>
     <span class="chip">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      11 AM – 12 PM
+      7 PM – 8 PM
     </span>
     <span class="chip">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      Grand Rapids, MI
+      Wyoming, MI
     </span>
     <span class="chip">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-      Ages 7+
+      Ages 13+
     </span>
     <span class="chip chip--green">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
@@ -402,17 +904,33 @@
   </div>
 
 
+  <!-- Mystery Prize Callout -->
+  <aside class="mystery-card fade-up" aria-label="K-pop album giveaway">
+    <span class="mystery-card__eyebrow">Giveaway</span>
+    <h2 class="mystery-card__title">Win a K-Pop Album</h2>
+    <p class="mystery-card__text">Head to our latest Instagram post and drop your guess for the mystery routine in the comments to enter. If multiple people guess correctly, we'll draw a winner <strong>LIVE in class</strong>.</p>
+    <a class="mystery-card__ig" href="https://www.instagram.com/hoodiez.kpop/" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>
+      Guess on Instagram
+    </a>
+  </aside>
+
   <!-- Description -->
   <section class="description fade-up">
-    <p><strong>Get ready to dance!</strong> Hoodiez is partnering with <span class="highlight">Expressions Dance Studio</span> for a fun, high-energy class where you'll learn choreography to <em>"Golden"</em> from K-Pop Demon Hunters.</p>
-    <p>This class will be taught by <span class="highlight">Nessa Maria</span>, the choreographer, and <span class="highlight">Isabella</span> from the K-pop cover group Hoodiez, bringing their style, experience, and passion straight to the studio.</p>
-    <p>Open to ages 7 and up, this is a <strong>beginners class</strong> perfect for K-pop fans and all dancers.</p>
+    <p>Join our <span class="highlight">Mystery K-Pop Dance Class</span> and learn an iconic routine — but we're not revealing it just yet.</p>
+    <p>This high-energy, all-levels class is taught by <span class="highlight">Isabella</span> from the K-pop cover group <span class="highlight">Hoodiez</span>, bringing her style, experience, and passion straight to the studio. Clues will be posted on our Instagram Stories — stay tuned and start guessing!</p>
     <p><strong>Come ready to move, learn, and shine.</strong></p>
   </section>
 
   <!-- Registration Form -->
   <section class="form-card fade-up" id="register">
     <h2 class="form-card__title">Register</h2>
+
+    <p class="age-note">
+      <strong>Ages 13 &amp; up — and yes, that includes the grown-ups.</strong>
+      You don't need to be a teenager to love K-pop. If the choreography excites you and you're at least 13, you belong on the floor with us.
+    </p>
+
     <form id="regForm" novalidate>
 
       <!-- Honeypot — hidden from real users, bots fill it -->
@@ -432,31 +950,9 @@
         </div>
       </div>
 
-      <!-- Age -->
-      <div class="field">
-        <label for="dancerAge">Dancer's Age</label>
-        <input type="number" id="dancerAge" name="dancerAge" required aria-required="true" aria-describedby="ageError" min="7" step="1" placeholder="Age">
-        <p class="age-error" id="ageError" role="alert">Must be 7 or older to register</p>
-      </div>
-
-      <!-- Emergency Contact -->
-      <div class="form-row">
-        <div class="field">
-          <label for="emergFirst">Emergency Contact First Name</label>
-          <input type="text" id="emergFirst" name="emergencyFirstName" required aria-required="true" placeholder="First name">
-        </div>
-        <div class="field">
-          <label for="emergLast">Emergency Contact Last Name</label>
-          <input type="text" id="emergLast" name="emergencyLastName" required aria-required="true" placeholder="Last name">
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="emergRel">Emergency Contact Relationship</label>
-        <input type="text" id="emergRel" name="emergencyRelationship" required aria-required="true" placeholder="e.g. Parent, Guardian">
-      </div>
-
-      <!-- Email & Phone -->
+      <!-- Your Contact Info -->
+      <h3 class="section-heading">Your Contact</h3>
+      <p class="section-hint">Where we'll send your registration confirmation and event reminders.</p>
       <div class="form-row">
         <div class="field">
           <label for="email">Email</label>
@@ -468,25 +964,111 @@
         </div>
       </div>
 
+      <!-- Emergency Contact -->
+      <h3 class="section-heading">Emergency Contact</h3>
+      <p class="section-hint">A separate person we can reach in case of an injury during class.</p>
+      <div class="form-row">
+        <div class="field">
+          <label for="emergFirst">First Name</label>
+          <input type="text" id="emergFirst" name="emergencyFirstName" required aria-required="true" placeholder="First name">
+        </div>
+        <div class="field">
+          <label for="emergLast">Last Name</label>
+          <input type="text" id="emergLast" name="emergencyLastName" required aria-required="true" placeholder="Last name">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="emergRel">Relationship</label>
+          <input type="text" id="emergRel" name="emergencyRelationship" required aria-required="true" placeholder="e.g. Parent, Guardian">
+        </div>
+        <div class="field">
+          <label for="emergPhone">Phone Number</label>
+          <input type="tel" id="emergPhone" name="emergencyPhone" required aria-required="true" placeholder="(555) 123-4567">
+        </div>
+      </div>
+
       <!-- Waivers -->
       <h3 class="waivers-heading">Waivers &amp; Agreements</h3>
 
       <div class="waiver-card">
         <p class="waiver-card__title">1. Release of Liability</p>
-        <p class="waiver-card__text">I hereby release, discharge, and hold harmless Hoodiez &amp; Expressions Dance Academy, its owners, instructors, employees, and agents from any and all claims, liabilities, or causes of action, known or unknown, arising out of myself or my child's participation in any activities or events related to Hoodiez or Expressions Dance Academy. This includes, but is not limited to, injuries, illnesses, or any other damages that may occur.</p>
+        <p class="waiver-card__text">It is required for every participant to sign a liability release waiver prior to participating in a Hoodiez dance class at Moveir Dance Studio (MDS). By completing this form, you agree to and understand the following: I understand that my electronic signature is the legal equivalent of my manual/handwritten signature and I consent to be legally bound by this agreement. I agree to release, forever discharge and hold harmless Hoodiez and MDS from any and all claims, demands, or causes of action which are in any way connected with my, my child(ren) / heir(s) / ward(s) participation at MDS. I understand that this is a perpetual release and will apply every time I, my child(ren) / heir(s) / ward(s) visit Moveir Dance Studio for a dance class with Hoodiez. I assume all risk of injury. I agree to properly care for the facility &amp; equipment, participate within my own limitations, and abide by all rules/guidelines specific to each event. In addition, I will not participate while under the influence of drugs or alcohol.</p>
         <label><input type="checkbox" id="waiver1"> I Agree</label>
       </div>
 
       <div class="waiver-card">
         <p class="waiver-card__title">2. Medical Emergencies</p>
-        <p class="waiver-card__text">In the event of an injury or illness, I authorize Hoodiez &amp; Expressions Dance Academy to seek medical treatment for my child if I am not present to do so. I understand that all reasonable efforts will be made to contact the parent/guardian in case of emergency. I understand that I will be responsible for any medical expenses incurred.</p>
+        <p class="waiver-card__text">In the event of an injury or illness, I authorize Hoodiez &amp; Moveir Dance Studio to seek medical treatment if I am not present to do so. I understand that all reasonable efforts will be made to contact the participant or their emergency contact. I understand that I will be responsible for any medical expenses incurred.</p>
         <label><input type="checkbox" id="waiver2"> I Agree</label>
       </div>
 
       <div class="waiver-card">
         <p class="waiver-card__title">3. Photo / Video Waiver</p>
-        <p class="waiver-card__text">I grant permission to Hoodiez &amp; Expressions Dance Academy to take and use photographs and videos of my child for promotional and educational purposes. This may include but is not limited to, use on social media and other marketing materials. I understand that these images may be used without compensation to my child or me.</p>
+        <p class="waiver-card__text">I grant permission to Hoodiez &amp; Moveir Dance Studio to take and use photographs and videos of the class for promotional and educational purposes. This may include, but is not limited to, use on social media and other marketing materials. I understand that these images may be used without compensation to me.</p>
         <label><input type="checkbox" id="waiver3"> I Agree</label>
+      </div>
+
+      <!-- Signer Identity Toggle -->
+      <fieldset class="signer-toggle" id="signerToggle">
+        <legend class="signer-toggle__legend">Who's signing this waiver? <span class="req">*</span></legend>
+        <label class="signer-option">
+          <input type="radio" name="signerRole" value="self" required>
+          <span>
+            <strong>I'm the dancer.</strong>
+            <em>I'm 18 or older and signing for myself.</em>
+          </span>
+        </label>
+        <label class="signer-option">
+          <input type="radio" name="signerRole" value="guardian" required>
+          <span>
+            <strong>I'm a parent or legal guardian.</strong>
+            <em>I'm signing on behalf of the dancer (under 18).</em>
+          </span>
+        </label>
+      </fieldset>
+
+      <!-- Signer Details (hidden when self) -->
+      <div class="signer-details" id="signerDetails" hidden>
+        <label class="signer-same" for="signerSameAsEmergency">
+          <input type="checkbox" id="signerSameAsEmergency">
+          <span>Same as my emergency contact</span>
+        </label>
+        <div class="form-row">
+          <div class="field">
+            <label for="signerFirst">Signer's First Name</label>
+            <input type="text" id="signerFirst" name="signerFirstName" placeholder="First name" autocomplete="given-name">
+          </div>
+          <div class="field">
+            <label for="signerLast">Signer's Last Name</label>
+            <input type="text" id="signerLast" name="signerLastName" placeholder="Last name" autocomplete="family-name">
+          </div>
+        </div>
+        <div class="field">
+          <label for="signerRel">Relationship to Dancer</label>
+          <select id="signerRel" name="signerRelationship" class="pixel-select">
+            <option value="">Select…</option>
+            <option value="Parent">Parent</option>
+            <option value="Legal Guardian">Legal Guardian</option>
+            <option value="Other">Other (family member with authority)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Signature -->
+      <div class="signature-block">
+        <label class="signature-block__label" for="sigPad">Signature of Parent/Guardian or Adult Dancer (at least 18 yrs old)</label>
+        <p class="signature-block__hint" id="sigHint">By signing, you confirm you are at least 18 years old and have legal authority to enter this agreement.</p>
+        <div class="signature-pad-wrap" id="sigWrap">
+          <canvas class="signature-pad" id="sigPad" aria-label="Signature pad"></canvas>
+          <span class="signature-baseline" aria-hidden="true"></span>
+          <span class="signature-x" aria-hidden="true">x</span>
+        </div>
+        <div class="signature-actions">
+          <span class="signature-typed" id="sigTyped"></span>
+          <button type="button" class="signature-clear" id="sigClear">Clear</button>
+        </div>
       </div>
 
       <button type="submit" class="submit-btn" id="submitBtn" disabled>Register &amp; Pay &mdash; $15</button>
@@ -495,25 +1077,27 @@
   </section>
 
   <footer class="footer">
-    &copy; 2026 Hoodiez &times; Expressions Dance Academy
+    &copy; 2026 Hoodiez
   </footer>
 
 </div>
 
 <script>
-  // ── Stars ──
+  // ── Pixel stars ──
   (function() {
     const field = document.getElementById('starfield');
-    const count = Math.min(120, Math.floor(window.innerWidth * window.innerHeight / 8000));
+    const count = Math.min(140, Math.floor(window.innerWidth * window.innerHeight / 7000));
+    const tints = ['', 'pink', 'cream', '', '', ''];
     for (let i = 0; i < count; i++) {
       const s = document.createElement('div');
-      s.className = 'star';
+      const tint = tints[Math.floor(Math.random() * tints.length)];
+      s.className = 'star' + (tint ? ' ' + tint : '');
       s.style.left = Math.random() * 100 + '%';
       s.style.top = Math.random() * 100 + '%';
       s.style.setProperty('--dur', (2 + Math.random() * 4).toFixed(1) + 's');
-      s.style.setProperty('--max-opacity', (0.4 + Math.random() * 0.6).toFixed(2));
+      s.style.setProperty('--max-opacity', (0.5 + Math.random() * 0.5).toFixed(2));
       s.style.animationDelay = (Math.random() * 5).toFixed(1) + 's';
-      if (Math.random() > 0.7) s.style.width = s.style.height = '3px';
+      if (Math.random() > 0.75) s.style.width = s.style.height = '5px';
       field.appendChild(s);
     }
   })();
@@ -528,30 +1112,203 @@
   const form = document.getElementById('regForm');
   const btn = document.getElementById('submitBtn');
   const errEl = document.getElementById('submitError');
-  const inputs = form.querySelectorAll('input[required]');
   const checks = [document.getElementById('waiver1'), document.getElementById('waiver2'), document.getElementById('waiver3')];
 
-  const ageInput = document.getElementById('dancerAge');
-  const ageError = document.getElementById('ageError');
+  // ── Signer role toggle ──
+  const signerDetails = document.getElementById('signerDetails');
+  const signerFirst = document.getElementById('signerFirst');
+  const signerLast = document.getElementById('signerLast');
+  const signerRel = document.getElementById('signerRel');
+  const sigHint = document.getElementById('sigHint');
+  const roleRadios = form.querySelectorAll('input[name="signerRole"]');
 
-  function validate() {
-    const ageVal = ageInput.value.trim();
-    const ageNum = Number(ageVal);
-    const ageInvalid = ageVal !== '' && (ageNum < 7 || !Number.isInteger(ageNum));
-    if (ageVal !== '' && ageNum < 7) {
-      ageError.textContent = 'Must be 7 or older to register';
-    } else if (ageVal !== '' && !Number.isInteger(ageNum)) {
-      ageError.textContent = 'Please enter a whole number';
-    }
-    ageError.classList.toggle('show', ageInvalid);
-    ageInput.classList.toggle('invalid', ageInvalid);
+  const signerToggle = document.getElementById('signerToggle');
 
-    const allFilled = [...inputs].every(i => i.value.trim() !== '');
-    const allChecked = checks.every(c => c.checked);
-    btn.disabled = !(allFilled && allChecked && !ageInvalid);
+  function getSignerRole() {
+    const r = form.querySelector('input[name="signerRole"]:checked');
+    return r ? r.value : null;
   }
 
-  inputs.forEach(i => {
+  function applySignerRole() {
+    const role = getSignerRole();
+    const isGuardian = role === 'guardian';
+    signerDetails.hidden = !isGuardian;
+    if (role) signerToggle.classList.remove('invalid');
+    [signerFirst, signerLast].forEach(el => {
+      if (isGuardian) {
+        el.setAttribute('required', '');
+        el.setAttribute('aria-required', 'true');
+      } else {
+        el.removeAttribute('required');
+        el.removeAttribute('aria-required');
+        el.classList.remove('invalid');
+        const err = el.parentElement.querySelector('.field-error');
+        if (err) err.classList.remove('show');
+      }
+    });
+    if (isGuardian) {
+      signerRel.setAttribute('required', '');
+    } else {
+      signerRel.removeAttribute('required');
+    }
+    sigHint.textContent = isGuardian
+      ? "By signing, you confirm you are the dancer's parent or legal guardian, are at least 18 years old, and have authority to bind the dancer to these waivers."
+      : 'By signing, you confirm you are the dancer (or signing for yourself), are at least 18 years old, and have legal authority to enter this agreement.';
+    refreshRequired();
+    updateTypedSignature();
+    validate();
+  }
+
+  // Recompute the required-input list whenever role changes
+  let inputs = [];
+  function refreshRequired() {
+    inputs = Array.from(form.querySelectorAll('input[required]'));
+  }
+  refreshRequired();
+
+  // ── Signature pad ──
+  const sigCanvas = document.getElementById('sigPad');
+  const sigWrap = document.getElementById('sigWrap');
+  const sigClearBtn = document.getElementById('sigClear');
+  const sigTyped = document.getElementById('sigTyped');
+  const ctx = sigCanvas.getContext('2d');
+  let sigHasInk = false;
+  let drawing = false;
+  let lastX = 0, lastY = 0;
+
+  function sizeCanvas() {
+    const rect = sigCanvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    sigCanvas.width = rect.width * dpr;
+    sigCanvas.height = rect.height * dpr;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#1f1247';
+    ctx.lineWidth = 2.2;
+  }
+  sizeCanvas();
+  window.addEventListener('resize', () => {
+    const data = sigHasInk ? sigCanvas.toDataURL() : null;
+    sizeCanvas();
+    if (data) {
+      const img = new Image();
+      img.onload = () => ctx.drawImage(img, 0, 0, sigCanvas.width / (window.devicePixelRatio || 1), sigCanvas.height / (window.devicePixelRatio || 1));
+      img.src = data;
+    }
+  });
+
+  function pointerPos(e) {
+    const rect = sigCanvas.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+  }
+  function startDraw(e) {
+    e.preventDefault();
+    drawing = true;
+    const { x, y } = pointerPos(e);
+    lastX = x; lastY = y;
+  }
+  function moveDraw(e) {
+    if (!drawing) return;
+    e.preventDefault();
+    const { x, y } = pointerPos(e);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    lastX = x; lastY = y;
+    if (!sigHasInk) {
+      sigHasInk = true;
+      sigWrap.classList.remove('invalid');
+      validate();
+    }
+  }
+  function endDraw() { drawing = false; }
+
+  sigCanvas.addEventListener('mousedown', startDraw);
+  sigCanvas.addEventListener('mousemove', moveDraw);
+  window.addEventListener('mouseup', endDraw);
+  sigCanvas.addEventListener('touchstart', startDraw, { passive: false });
+  sigCanvas.addEventListener('touchmove', moveDraw, { passive: false });
+  sigCanvas.addEventListener('touchend', endDraw);
+
+  sigClearBtn.addEventListener('click', () => {
+    ctx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+    sigHasInk = false;
+    validate();
+  });
+
+  // Mirror typed signer name below the canvas so the user sees the legal record
+  function getSignerNames() {
+    const role = getSignerRole();
+    if (role === 'guardian') {
+      return { first: signerFirst.value.trim(), last: signerLast.value.trim() };
+    }
+    if (role === 'self') {
+      return { first: form.dancerFirstName.value.trim(), last: form.dancerLastName.value.trim() };
+    }
+    return { first: '', last: '' };
+  }
+  function updateTypedSignature() {
+    const { first, last } = getSignerNames();
+    sigTyped.textContent = (first || last) ? `Signed: ${first} ${last}`.trim() : '';
+  }
+  form.dancerFirstName.addEventListener('input', updateTypedSignature);
+  form.dancerLastName.addEventListener('input', updateTypedSignature);
+  signerFirst.addEventListener('input', updateTypedSignature);
+  signerLast.addEventListener('input', updateTypedSignature);
+  roleRadios.forEach(r => r.addEventListener('change', applySignerRole));
+
+  function validate() {
+    const role = getSignerRole();
+    const allFilled = inputs.every(i => i.value.trim() !== '');
+    const relOk = role !== 'guardian' || signerRel.value.trim() !== '';
+    const allChecked = checks.every(c => c.checked);
+    btn.disabled = !(role && allFilled && relOk && allChecked && sigHasInk);
+  }
+  signerRel.addEventListener('change', validate);
+
+  // ── "Same as Emergency Contact" auto-fill ──
+  const signerSameCb = document.getElementById('signerSameAsEmergency');
+
+  function relationshipToDropdownValue(text) {
+    const t = text.trim().toLowerCase();
+    if (!t) return '';
+    if (t.includes('legal guardian') || t === 'guardian') return 'Legal Guardian';
+    if (t.includes('parent') || ['mom','mum','mother','dad','father','step-mom','step-dad','stepparent','step-parent'].includes(t)) return 'Parent';
+    return 'Other';
+  }
+
+  function applySameAsEmergency() {
+    const same = signerSameCb.checked;
+    if (same) {
+      signerFirst.value = form.emergencyFirstName.value.trim();
+      signerLast.value = form.emergencyLastName.value.trim();
+      signerRel.value = relationshipToDropdownValue(form.emergencyRelationship.value);
+      [signerFirst, signerLast, signerRel].forEach(el => {
+        el.disabled = true;
+        el.classList.remove('invalid');
+        const err = el.parentElement.querySelector('.field-error');
+        if (err) err.classList.remove('show');
+      });
+    } else {
+      [signerFirst, signerLast, signerRel].forEach(el => { el.disabled = false; });
+    }
+    updateTypedSignature();
+    validate();
+  }
+
+  signerSameCb.addEventListener('change', applySameAsEmergency);
+
+  // Live-sync if the user edits emergency contact fields while the checkbox is on
+  ['emergencyFirstName','emergencyLastName','emergencyRelationship'].forEach(name => {
+    form[name].addEventListener('input', () => { if (signerSameCb.checked) applySameAsEmergency(); });
+  });
+
+  // Attach validation listeners to every text-like input — required state is dynamic
+  form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]').forEach(i => {
     i.addEventListener('input', function() {
       if (this.value.trim() !== '') {
         this.classList.remove('invalid');
@@ -562,6 +1319,7 @@
       validate();
     });
     i.addEventListener('blur', function() {
+      if (!this.hasAttribute('required')) return;
       if (this.dataset.touched) return;
       this.dataset.touched = 'true';
       if (this.value.trim() === '') {
@@ -581,25 +1339,52 @@
   });
   checks.forEach(c => c.addEventListener('change', validate));
 
+  // Initialize role-dependent state
+  applySignerRole();
+
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
     errEl.style.display = 'none';
+
+    const role = getSignerRole();
+    if (!role) {
+      signerToggle.classList.add('invalid');
+      signerToggle.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      errEl.textContent = 'Please tell us who is signing this waiver.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    if (!sigHasInk) {
+      sigWrap.classList.add('invalid');
+      errEl.textContent = 'Please sign in the signature box.';
+      errEl.style.display = 'block';
+      return;
+    }
+
     btn.disabled = true;
     btn.textContent = 'Processing\u2026';
 
+    const dancerFirst = form.dancerFirstName.value.trim();
+    const dancerLast = form.dancerLastName.value.trim();
     const data = {
       _hp: document.getElementById('hpField').value,
-      dancerFirstName: form.dancerFirstName.value.trim(),
-      dancerLastName: form.dancerLastName.value.trim(),
-      dancerAge: Number(form.dancerAge.value),
+      dancerFirstName: dancerFirst,
+      dancerLastName: dancerLast,
+      signerRole: role,
+      signerFirstName: role === 'guardian' ? signerFirst.value.trim() : dancerFirst,
+      signerLastName: role === 'guardian' ? signerLast.value.trim() : dancerLast,
+      signerRelationship: role === 'guardian' ? signerRel.value.trim() : 'Self',
       emergencyFirstName: form.emergencyFirstName.value.trim(),
       emergencyLastName: form.emergencyLastName.value.trim(),
       emergencyRelationship: form.emergencyRelationship.value.trim(),
+      emergencyPhone: form.emergencyPhone.value.trim(),
       email: form.email.value.trim(),
       phone: form.phone.value.trim(),
       liabilityAgreed: checks[0].checked,
       medicalAgreed: checks[1].checked,
       photoAgreed: checks[2].checked,
+      signature: sigCanvas.toDataURL('image/png'),
       agreedAt: new Date().toISOString()
     };
 
