@@ -12,27 +12,27 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      /* Palette pulled from the hero video */
-      --bg-deep: #0a0822;
-      --bg-mid: #16104a;
-      --bg-card: #1f1657;
-      --mint: #7ee3d2;
-      --mint-light: #a6efe1;
-      --pink: #ff4d8a;
-      --pink-light: #ff7eb3;
-      --cream: #fde68a;
-      --cream-light: #fef3c7;
-      --green: #34d399;
-      --green-light: #4ade80;
-      --gold: #fcd34d;
+      /* Six-color palette sampled from the hero video, excluding the bottom logo */
+      --bg-deep: #050505;
+      --bg-mid: #30303c;
+      --bg-card: #30303c;
+      --mint: #00fce4;
+      --mint-light: #c0fcf0;
+      --pink: #6c9c9c;
+      --pink-light: #c0fcf0;
+      --cream: #fcf0c0;
+      --cream-light: #fcf0c0;
+      --green: #00fce4;
+      --green-light: #c0fcf0;
+      --gold: #fcf0c0;
       --white: #ffffff;
-      --white-muted: #c4b5d4;
-      --ink: #1a1240; /* dark text on cream/mint cards */
+      --white-muted: #c0fcf0;
+      --ink: #050505; /* dark text on cream/mint cards */
       /* Pixel-game tokens */
-      --pixel-shadow-pink: 6px 6px 0 0 #d63375;
-      --pixel-shadow-mint: 6px 6px 0 0 #2fa595;
-      --pixel-shadow-cream: 6px 6px 0 0 #d6a233;
-      --pixel-shadow-ink: 4px 4px 0 0 #0a0822;
+      --pixel-shadow-pink: 6px 6px 0 0 #6c9c9c;
+      --pixel-shadow-mint: 6px 6px 0 0 #6c9c9c;
+      --pixel-shadow-cream: 6px 6px 0 0 #30303c;
+      --pixel-shadow-ink: 4px 4px 0 0 #050505;
       --pixel-border: 3px solid var(--ink);
     }
 
@@ -44,8 +44,8 @@
     body {
       font-family: 'Outfit', sans-serif;
       background:
-        radial-gradient(circle at 20% 10%, rgba(126, 227, 210, 0.08), transparent 45%),
-        radial-gradient(circle at 80% 80%, rgba(255, 77, 138, 0.08), transparent 45%),
+        radial-gradient(circle at 20% 10%, rgba(0, 252, 228, 0.08), transparent 45%),
+        radial-gradient(circle at 80% 80%, rgba(48, 48, 60, 0.35), transparent 45%),
         var(--bg-deep);
       color: var(--white);
       min-height: 100vh;
@@ -86,12 +86,12 @@
       width: 3px;
       height: 3px;
       background: var(--mint-light);
-      box-shadow: 0 0 0 1px rgba(126, 227, 210, 0.18);
+      box-shadow: 0 0 0 1px rgba(192, 252, 240, 0.18);
       animation: twinkle var(--dur, 3s) steps(3) infinite alternate;
       opacity: 0;
     }
-    .star.pink { background: var(--pink-light); box-shadow: 0 0 0 1px rgba(255, 126, 179, 0.2); }
-    .star.cream { background: var(--cream); box-shadow: 0 0 0 1px rgba(253, 230, 138, 0.25); }
+    .star.pink { background: var(--pink-light); box-shadow: 0 0 0 1px rgba(192, 252, 240, 0.2); }
+    .star.cream { background: var(--cream); box-shadow: 0 0 0 1px rgba(252, 240, 192, 0.25); }
 
     @keyframes twinkle {
       0% { opacity: 0.1; transform: scale(0.8); }
@@ -162,12 +162,12 @@
     .cta-btn:hover {
       background: var(--mint);
       transform: translate(-2px, -2px);
-      box-shadow: 8px 8px 0 0 #d63375;
+      box-shadow: 8px 8px 0 0 #6c9c9c;
     }
 
     .cta-btn:active {
       transform: translate(4px, 4px);
-      box-shadow: 2px 2px 0 0 #d63375;
+      box-shadow: 2px 2px 0 0 #6c9c9c;
     }
 
     /* ── Info Chips ── */
@@ -220,8 +220,17 @@
     .description p:last-child { margin-bottom: 0; }
 
     .highlight {
-      color: var(--mint-light);
+      color: #f0a8e2;
       font-weight: 700;
+      text-shadow: 2px 2px 0 var(--ink);
+    }
+    .description strong { color: #f0a8e2; }
+    .mystery-blank {
+      color: #f0a8e2;
+      font-weight: 700;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.18em;
       text-shadow: 2px 2px 0 var(--ink);
     }
     .highlight--pink { color: var(--pink-light); text-shadow: 2px 2px 0 var(--ink); }
@@ -231,11 +240,11 @@
       position: relative;
       margin: 2.5rem 0;
       padding: 1.75rem 1.5rem 1.5rem;
-      background: var(--mint);
+      background: #f0a8e2;
       color: var(--ink);
       border: var(--pixel-border);
       border-radius: 0;
-      box-shadow: var(--pixel-shadow-pink);
+      box-shadow: 6px 6px 0 0 #c7fffa;
       overflow: hidden;
     }
 
@@ -247,7 +256,7 @@
       font-family: 'Press Start 2P', system-ui, monospace;
       font-size: 11rem;
       line-height: 1;
-      color: rgba(26, 18, 64, 0.16);
+      color: rgba(5, 5, 5, 0.16);
       pointer-events: none;
     }
 
@@ -271,7 +280,7 @@
       font-size: 0.65rem;
       letter-spacing: 0.1em;
       color: var(--ink);
-      background: var(--pink);
+      background: #c7fffa;
       padding: 0.4rem 0.7rem;
       border: 2px solid var(--ink);
       box-shadow: 3px 3px 0 0 var(--ink);
@@ -294,7 +303,7 @@
       font-weight: 500;
     }
 
-    .mystery-card__text strong { color: #b91c5c; }
+    .mystery-card__text strong { color: var(--bg-mid); }
 
     .mystery-card__ig {
       display: inline-flex;
@@ -362,7 +371,7 @@
       gap: 0.65rem;
       padding: 0.6rem 0.5rem;
       cursor: pointer;
-      border-top: 1px dashed rgba(126, 227, 210, 0.25);
+      border-top: 1px dashed rgba(192, 252, 240, 0.25);
       margin-top: 0.6rem;
     }
     .signer-option:first-of-type { border-top: 0; margin-top: 0.75rem; }
@@ -406,7 +415,7 @@
     .signer-details {
       margin: -0.25rem 0 1rem;
       padding: 1rem;
-      background: rgba(255, 77, 138, 0.08);
+      background: rgba(192, 252, 240, 0.08);
       border: 2px dashed var(--pink);
     }
 
@@ -453,10 +462,10 @@
     /* Auto-filled (disabled) inputs/select look slightly muted */
     .field input:disabled,
     .pixel-select:disabled {
-      background: #efe7c2;
-      color: #6b6080;
+      background: var(--cream);
+      color: var(--bg-mid);
       cursor: not-allowed;
-      box-shadow: 3px 3px 0 0 rgba(126, 227, 210, 0.5);
+      box-shadow: 3px 3px 0 0 rgba(108, 156, 156, 0.5);
     }
 
     /* Pixel-styled select */
@@ -498,7 +507,7 @@
       display: block;
       font-family: 'Press Start 2P', system-ui, monospace;
       font-size: 0.65rem;
-      color: #b91c5c;
+      color: var(--bg-mid);
       margin-bottom: 0.4rem;
       letter-spacing: 0.04em;
     }
@@ -524,13 +533,13 @@
 
     .signature-block__hint {
       font-size: 0.78rem;
-      color: rgba(255, 255, 255, 0.5);
+      color: #f0a8e2;
       margin-bottom: 0.6rem;
     }
 
     .signature-pad-wrap {
       position: relative;
-      background: #fdfcf5;
+      background: var(--cream-light);
       border: 3px solid var(--ink);
       border-radius: 0;
       overflow: hidden;
@@ -555,7 +564,7 @@
       left: 1rem;
       right: 1rem;
       bottom: 2rem;
-      border-top: 1px dashed rgba(15, 23, 42, 0.25);
+      border-top: 1px dashed rgba(5, 5, 5, 0.25);
       pointer-events: none;
     }
 
@@ -563,7 +572,7 @@
       position: absolute;
       left: 1rem;
       bottom: 2.05rem;
-      color: rgba(15, 23, 42, 0.45);
+      color: rgba(5, 5, 5, 0.45);
       font-family: 'Caveat', cursive;
       font-size: 1.4rem;
       pointer-events: none;
@@ -671,7 +680,7 @@
 
     .section-hint {
       font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.55);
+      color: #f0a8e2;
       margin: 0 0 0.85rem;
       line-height: 1.4;
     }
@@ -696,7 +705,7 @@
     }
 
     .field input::placeholder {
-      color: rgba(26, 18, 64, 0.4);
+      color: rgba(5, 5, 5, 0.4);
     }
 
     .field-error {
@@ -813,19 +822,19 @@
     .submit-btn:hover:not(:disabled) {
       background: var(--cream);
       transform: translate(-2px, -2px);
-      box-shadow: 8px 8px 0 0 #d63375;
+      box-shadow: 8px 8px 0 0 #6c9c9c;
     }
 
     .submit-btn:active:not(:disabled) {
       transform: translate(4px, 4px);
-      box-shadow: 2px 2px 0 0 #d63375;
+      box-shadow: 2px 2px 0 0 #6c9c9c;
     }
 
     .submit-btn:disabled {
       opacity: 0.45;
       cursor: not-allowed;
       transform: none;
-      background: #4d4577;
+      background: var(--bg-mid);
       color: rgba(255, 255, 255, 0.55);
       text-shadow: none;
       box-shadow: 4px 4px 0 0 var(--ink);
@@ -899,7 +908,7 @@
     </span>
     <span class="chip chip--green">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-      $15
+      15
     </span>
   </div>
 
@@ -908,8 +917,8 @@
   <aside class="mystery-card fade-up" aria-label="K-pop album giveaway">
     <span class="mystery-card__eyebrow">Giveaway</span>
     <h2 class="mystery-card__title">Win a K-Pop Album</h2>
-    <p class="mystery-card__text">Head to our latest Instagram post and drop your guess for the mystery routine in the comments to enter. If multiple people guess correctly, we'll draw a winner <strong>LIVE in class</strong>.</p>
-    <a class="mystery-card__ig" href="https://www.instagram.com/hoodiez.kpop/" target="_blank" rel="noopener">
+    <p class="mystery-card__text">Head to our latest Instagram post and drop your guess for the mystery class in the comments to enter. If multiple people guess correctly, we'll draw a winner <strong>LIVE in class</strong>.</p>
+    <a class="mystery-card__ig" href="https://www.instagram.com/hoodiez.workshop/" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>
       Guess on Instagram
     </a>
@@ -917,7 +926,7 @@
 
   <!-- Description -->
   <section class="description fade-up">
-    <p>Join our <span class="highlight">Mystery K-Pop Dance Class</span> and learn an iconic routine — but we're not revealing it just yet.</p>
+    <p>Join our <span class="highlight">Mystery K-Pop Dance Class</span> and learn an iconic dance from the song <span class="mystery-blank">???</span> but we're not revealing it just yet.</p>
     <p>This high-energy, all-levels class is taught by <span class="highlight">Isabella</span> from the K-pop cover group <span class="highlight">Hoodiez</span>, bringing her style, experience, and passion straight to the studio. Clues will be posted on our Instagram Stories — stay tuned and start guessing!</p>
     <p><strong>Come ready to move, learn, and shine.</strong></p>
   </section>
@@ -1185,7 +1194,7 @@
     ctx.scale(dpr, dpr);
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.strokeStyle = '#1f1247';
+    ctx.strokeStyle = '#050505';
     ctx.lineWidth = 2.2;
   }
   sizeCanvas();

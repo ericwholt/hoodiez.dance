@@ -27,7 +27,7 @@ const SHEET_HEADERS = [
   'Status', 'Payment ID', 'Amount', 'Paid At',
 ];
 
-// A1 letter for a 1-indexed column. SHEET_HEADERS goes up to T (20), so 1-letter is sufficient.
+// A1 letter for a 1-indexed column. SHEET_HEADERS currently fits within A:Z.
 function colLetter(n) {
   return String.fromCharCode(64 + n);
 }
