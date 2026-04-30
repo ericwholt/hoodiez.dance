@@ -3,9 +3,16 @@
 //   GOOGLE_SERVICE_ACCOUNT_EMAIL
 //   GOOGLE_PRIVATE_KEY
 //   GOOGLE_SHEET_ID
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const Stripe = require('stripe');
 const crypto = require('crypto');
 const { google } = require('googleapis');
+
+const REQUIRED_ENV = [
+  'STRIPE_SECRET_KEY',
+  'GOOGLE_SERVICE_ACCOUNT_EMAIL',
+  'GOOGLE_PRIVATE_KEY',
+  'GOOGLE_SHEET_ID',
+];
 
 const REQUIRED_FIELDS = [
   'dancerFirstName', 'dancerLastName',
@@ -32,6 +39,14 @@ function colLetter(n) {
   return String.fromCharCode(64 + n);
 }
 
+function missingEnvVars() {
+  return REQUIRED_ENV.filter((name) => !process.env[name]);
+}
+
+function getStripeClient() {
+  return Stripe(process.env.STRIPE_SECRET_KEY);
+}
+
 function getSheetsClient() {
   const auth = new google.auth.GoogleAuth({
     credentials: {
@@ -46,7 +61,9 @@ function getSheetsClient() {
 async function ensureHeaders(sheets, sheetId) {
   const range = `Sheet1!A1:${colLetter(SHEET_HEADERS.length)}1`;
   const existing = await sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range });
-  if (!existing.data.values || existing.data.values.length === 0) {
+  const existingHeaders = existing.data.values && existing.data.values[0] ? existing.data.values[0] : [];
+  const headersMatch = SHEET_HEADERS.every((header, index) => existingHeaders[index] === header);
+  if (!headersMatch) {
     await sheets.spreadsheets.values.update({
       spreadsheetId: sheetId,
       range,
@@ -70,7 +87,9 @@ async function appendRegistration(row) {
 }
 
 module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', 'https://hoodiez.dance');
+  const allowedOrigins = ['https://hoodiez.dance', 'https://www.hoodiez.dance'];
+  const origin = allowedOrigins.includes(req.headers.origin) ? req.headers.origin : allowedOrigins[0];
+  res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -82,10 +101,16 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  const missingEnv = missingEnvVars();
+  if (missingEnv.length > 0) {
+    console.error('Checkout configuration missing env vars:', missingEnv.join(', '));
+    return res.status(503).json({ error: 'Checkout is temporarily unavailable' });
+  }
+
   try {
     const body = req.body;
 
-    // Honeypot — if this hidden field has a value, treat as bot
+    // Honeypot: if this hidden field has a value, treat as bot
     if (body._hp) {
       return res.status(200).json({ url: 'https://hoodiez.dance/thanks.html' });
     }
@@ -109,6 +134,7 @@ module.exports = async function handler(req, res) {
     }
 
     const registrationId = crypto.randomUUID();
+    const quantity = 1;
 
     // Write registration to Google Sheets BEFORE creating the Stripe session
     // so the signature (too large for Stripe metadata) and PII land in our sheet.
@@ -138,7 +164,7 @@ module.exports = async function handler(req, res) {
       '',
     ]);
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripeClient().checkout.sessions.create({
       payment_method_types: ['card'],
       customer_email: body.email,
       line_items: [
@@ -151,7 +177,7 @@ module.exports = async function handler(req, res) {
             },
             unit_amount: 1500,
           },
-          quantity: 1,
+          quantity,
         },
       ],
       payment_intent_data: {
@@ -160,7 +186,7 @@ module.exports = async function handler(req, res) {
       mode: 'payment',
       success_url: 'https://hoodiez.dance/thanks.html?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: 'https://hoodiez.dance/#register',
-      // Only the registrationId is sent to Stripe — PII stays in our sheet.
+      // Only the registrationId is sent to Stripe; PII stays in our sheet.
       metadata: { registrationId },
     });
 
