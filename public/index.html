@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mystery K-Pop Dance Class - Hoodiez</title>
-  <meta name="description" content="Mystery K-pop dance class with a chance to win a K-pop album. May 14, 2026 at Moveir Dance Studio in Wyoming, MI. All levels, ages 13+, $15.">
+  <title>Stick With You - TXT K-Pop Dance Class - Hoodiez</title>
+  <meta name="description" content="Stick With You - TXT K-pop dance class. May 14, 2026 at Moveir Dance Studio in Wyoming, MI. All levels, ages 13+, $15.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;700&family=Outfit:wght@300;400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -12,7 +12,7 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      /* Six-color palette sampled from the hero video, excluding the bottom logo */
+      /* Six-color palette sampled from the hero image, excluding the bottom logo */
       --bg-deep: #050505;
       --bg-mid: #30303c;
       --bg-card: #30303c;
@@ -120,13 +120,13 @@
       padding: 2rem 1.25rem 4rem;
     }
 
-    /* ── Hero (video-first) ── */
+    /* ── Hero ── */
     .hero {
       text-align: center;
       padding: 0 0 1.5rem;
     }
 
-    .hero video {
+    .hero__flyer {
       display: block;
       width: 100%;
       height: auto;
@@ -236,7 +236,7 @@
     }
     .highlight--pink { color: var(--pink-light); text-shadow: 2px 2px 0 var(--ink); }
 
-    /* ── Mystery Prize Card ── */
+    /* ── Prize Card ── */
     .mystery-card {
       position: relative;
       margin: 2.5rem 0;
@@ -905,11 +905,9 @@
 
 <div class="container">
 
-  <!-- Hero: the video IS the flyer -->
+  <!-- Hero: the image IS the flyer -->
   <header class="hero fade-up">
-    <video autoplay muted playsinline preload="auto">
-      <source src="/hero.mp4" type="video/mp4">
-    </video>
+    <img class="hero__flyer" src="/hero.jpg" alt="K-pop dance class flyer for Stick With You - TXT">
     <div class="hero__cta-row">
       <a href="#register" class="cta-btn">Register Now &darr;</a>
     </div>
@@ -940,21 +938,21 @@
   </div>
 
 
-  <!-- Mystery Prize Callout -->
+  <!-- Prize Callout -->
   <aside class="mystery-card fade-up" aria-label="K-pop album giveaway">
     <span class="mystery-card__eyebrow">Giveaway</span>
     <h2 class="mystery-card__title">Win a K-Pop Album</h2>
-    <p class="mystery-card__text">Head to our latest Instagram post and drop your guess for the mystery class in the comments to enter. If multiple people guess correctly, we'll draw a winner <strong>LIVE in class</strong>.</p>
+    <p class="mystery-card__text">The guesses are in. Visit our latest Instagram post to see what everyone picked, then join us in class where we'll draw the album winner <strong>LIVE</strong>.</p>
     <a class="mystery-card__ig" href="https://www.instagram.com/hoodiez.workshop/" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>
-      Guess on Instagram
+      See the Guesses
     </a>
   </aside>
 
   <!-- Description -->
   <section class="description fade-up">
-    <p>Join our <span class="highlight">Mystery K-Pop Dance Class</span> and learn an iconic dance from the song <span class="mystery-blank">???</span> but we're not revealing it just yet.</p>
-    <p>This high-energy, all-levels class is taught by <span class="highlight">Isabella</span> from the K-pop cover group <span class="highlight">Hoodiez</span>, bringing her style, experience, and passion straight to the studio. Clues will be posted on our Instagram Stories, stay tuned and start guessing!</p>
+    <p>Join our <span class="highlight">K-Pop Dance Class</span> and learn an iconic dance from the song <span class="mystery-blank">Stick With You - TXT</span>.</p>
+    <p>This high-energy, all-levels class is taught by <span class="highlight">Isabella</span> from the K-pop cover group <span class="highlight">Hoodiez</span>, bringing her style, experience, and passion straight to the studio.</p>
     <p><strong>Come ready to move, learn, and shine.</strong></p>
   </section>
 

@@ -184,8 +184,8 @@ module.exports = async function handler(req, res) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: 'Mystery K-Pop Dance Class',
-              description: 'Mystery K-Pop dance class with Hoodiez. Guess the song on Instagram for a chance to win a K-pop album. All levels, ages 13+.',
+              name: 'Stick With You - TXT K-Pop Dance Class',
+              description: 'Stick With You - TXT K-Pop dance class with Hoodiez. All levels, ages 13+.',
             },
             unit_amount: 1500,
           },
@@ -193,7 +193,7 @@ module.exports = async function handler(req, res) {
         },
       ],
       payment_intent_data: {
-        description: 'Mystery K-Pop Dance Class | Thu, May 14, 2026, 7-8 PM | Moveir Dance Studio | 2485 Burlingame Ave SW, Wyoming, MI',
+        description: 'Stick With You - TXT K-Pop Dance Class | Thu, May 14, 2026, 7-8 PM | Moveir Dance Studio | 2485 Burlingame Ave SW, Wyoming, MI',
       },
       mode: 'payment',
       success_url: 'https://hoodiez.dance/thanks.html?session_id={CHECKOUT_SESSION_ID}',
